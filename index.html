@@ -1,0 +1,1772 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<title>Impara l’italiano</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Italienska">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#0f766e">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%87%AE%F0%9F%87%B9%3C/text%3E%3C/svg%3E">
+<style>
+:root {
+  --bg: #f6f8f4;
+  --surface: #ffffff;
+  --ink: #1b2a28;
+  --muted: #5b6b68;
+  --line: #d5ded9;
+  --primary: #0f766e;
+  --primary-ink: #ffffff;
+  --soft: #e3f1ee;
+  --good: #1f7a3d;
+  --good-bg: #dff3e4;
+  --bad: #b3261e;
+  --bad-bg: #fbe3e0;
+  --star: #e0a100;
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101816; --surface: #19241f; --ink: #eef4f1; --muted: #9bb0aa; --line: #2c3d37;
+    --primary: #2bb3a6; --primary-ink: #04201c; --soft: #173430;
+    --good: #7fd69a; --good-bg: #17331f; --bad: #ff9a90; --bad-bg: #3a1b18; --star: #f2c94c;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101816; --surface: #19241f; --ink: #eef4f1; --muted: #9bb0aa; --line: #2c3d37;
+  --primary: #2bb3a6; --primary-ink: #04201c; --soft: #173430;
+  --good: #7fd69a; --good-bg: #17331f; --bad: #ff9a90; --bad-bg: #3a1b18; --star: #f2c94c;
+  color-scheme: dark;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); -webkit-text-size-adjust: 100%; }
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 20px;
+  line-height: 1.4;
+  -webkit-tap-highlight-color: transparent;
+}
+#app { max-width: 560px; margin: 0 auto; padding: 20px 18px 240px; }
+button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; touch-action: manipulation; }
+button:focus-visible { outline: 3px solid var(--primary); outline-offset: 3px; }
+
+.title { font-size: 34px; font-weight: 800; margin: 8px 0 4px; letter-spacing: -0.5px; }
+.h2 { font-size: 24px; font-weight: 800; margin: 26px 0 12px; }
+.sub { color: var(--muted); margin: 0 0 22px; font-size: 19px; }
+.small { font-size: 17px; color: var(--muted); }
+.stripe { display: flex; height: 8px; border-radius: 4px; overflow: hidden; margin: 0 0 18px; }
+.stripe i { flex: 1; }
+.stripe i:nth-child(1) { background: #2e8b57; }
+.stripe i:nth-child(2) { background: #f3f1ea; }
+.stripe i:nth-child(3) { background: #d0342c; }
+
+.card {
+  background: var(--surface); border: 2px solid var(--line); border-radius: 18px;
+  padding: 16px 18px; margin: 0 0 14px;
+}
+.lesson {
+  display: flex; align-items: center; gap: 16px; width: 100%; text-align: left;
+  background: var(--surface); border: 2px solid var(--line); border-radius: 18px;
+  padding: 16px 18px; margin: 0 0 12px; min-height: 84px;
+}
+.lesson:active { transform: scale(0.985); }
+.lesson .em { font-size: 40px; line-height: 1; }
+.lesson .tx { flex: 1; min-width: 0; }
+.lesson .nm { font-weight: 700; font-size: 22px; display: block; }
+.lesson .ct { color: var(--muted); font-size: 17px; display: block; }
+.lesson .st { color: var(--star); font-size: 22px; white-space: nowrap; font-weight: 800; }
+.lesson.done { border-color: var(--good); }
+.lesson.test { border-style: dashed; border-color: var(--primary); }
+.mini { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; margin-top: 8px; }
+.mini > div { height: 100%; background: var(--primary); }
+
+.top { display: flex; align-items: center; gap: 14px; margin: 4px 0 24px; }
+.back { font-size: 18px; color: var(--muted); padding: 10px 6px; min-height: 44px; }
+.bar { flex: 1; height: 16px; background: var(--line); border-radius: 8px; overflow: hidden; }
+.bar > div { height: 100%; background: var(--primary); border-radius: 8px; transition: width .35s ease; }
+
+.ask { color: var(--muted); font-size: 19px; margin: 0 0 10px; }
+.word { display: flex; align-items: center; gap: 14px; margin: 0 0 26px; }
+.word .big { font-size: 32px; font-weight: 800; line-height: 1.2; letter-spacing: -0.3px; }
+.listen {
+  flex: none; width: 56px; height: 56px; border-radius: 50%;
+  background: var(--primary); color: var(--primary-ink); font-size: 26px;
+  display: grid; place-items: center;
+}
+.listen.slow { background: var(--soft); color: var(--ink); }
+.listen:active { transform: scale(0.94); }
+.biglisten { display: flex; gap: 16px; justify-content: center; margin: 10px 0 28px; }
+.biglisten .listen { width: 96px; height: 96px; font-size: 44px; }
+
+.opt {
+  display: block; width: 100%; text-align: left;
+  background: var(--surface); border: 2px solid var(--line); border-radius: 16px;
+  padding: 16px 18px; margin: 0 0 12px; min-height: 68px;
+  font-size: 22px; font-weight: 600;
+}
+.opt:active { transform: scale(0.985); }
+.opt.good { background: var(--good-bg); border-color: var(--good); color: var(--good); }
+.opt.bad { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); }
+.opt[disabled] { cursor: default; }
+
+.feedback {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+  padding: 16px 18px calc(18px + env(safe-area-inset-bottom, 0px));
+  border-top: 2px solid var(--line);
+}
+.feedback.good { background: var(--good-bg); border-color: var(--good); }
+.feedback.bad { background: var(--bad-bg); border-color: var(--bad); }
+.feedback .in { max-width: 560px; margin: 0 auto; }
+.feedback h2 { margin: 0 0 4px; font-size: 24px; }
+.feedback.good h2 { color: var(--good); }
+.feedback.bad h2 { color: var(--bad); }
+.feedback p { margin: 0 0 12px; font-size: 19px; }
+.go {
+  display: block; width: 100%; background: var(--primary); color: var(--primary-ink);
+  font-weight: 800; font-size: 22px; border-radius: 16px; padding: 16px; min-height: 60px; text-align: center;
+}
+.go:active, .btn2:active { transform: scale(0.985); }
+.go[disabled] { opacity: .45; }
+.btn2 {
+  display: block; width: 100%; background: var(--surface); color: var(--ink);
+  border: 2px solid var(--line); font-weight: 700; font-size: 20px; border-radius: 16px;
+  padding: 14px; min-height: 56px; margin: 12px 0 0; text-align: center;
+}
+.btn2.sm { font-size: 17px; min-height: 44px; padding: 10px; color: var(--muted); }
+.two { display: flex; gap: 10px; }
+.two > * { flex: 1; }
+
+.tip { background: var(--soft); border-radius: 18px; padding: 16px 18px; margin: 0 0 18px; font-size: 18px; }
+.tip h3 { margin: 0 0 6px; font-size: 19px; }
+.tip b { color: var(--primary); }
+.phr { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 12px 4px; border-bottom: 1px solid var(--line); }
+.phr .listen { width: 44px; height: 44px; font-size: 20px; }
+.phr .it { font-weight: 700; display: block; }
+.phr .sv { color: var(--muted); font-size: 17px; display: block; }
+
+.ans {
+  width: 100%; font: inherit; font-size: 24px; padding: 14px 16px; color: var(--ink);
+  background: var(--surface); border: 2px solid var(--line); border-radius: 14px; outline: none;
+}
+.ans:focus { border-color: var(--primary); }
+.accents { display: flex; gap: 8px; margin: 10px 0 18px; flex-wrap: wrap; }
+.accents button {
+  min-width: 48px; height: 48px; border-radius: 12px; background: var(--surface);
+  border: 2px solid var(--line); font-size: 22px; font-weight: 700;
+}
+.slot {
+  min-height: 72px; border-bottom: 2px dashed var(--line); padding: 6px 0 10px; margin: 0 0 22px;
+  display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start;
+}
+.bank { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 24px; }
+.tile {
+  background: var(--surface); border: 2px solid var(--line); border-bottom-width: 4px;
+  border-radius: 12px; padding: 8px 14px; font-size: 21px; font-weight: 600; min-height: 48px;
+}
+.tile.gone { visibility: hidden; }
+
+.micwrap { text-align: center; margin: 12px 0 10px; }
+.mic {
+  width: 128px; height: 128px; border-radius: 50%; margin: 0 auto;
+  background: var(--primary); color: var(--primary-ink); font-size: 54px;
+  display: grid; place-items: center; box-shadow: 0 6px 18px rgba(0,0,0,.15);
+}
+.mic.on { background: var(--bad); animation: pulse 1.2s infinite; }
+@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.07); } }
+.mst { min-height: 56px; margin: 14px 0 0; font-size: 19px; color: var(--muted); }
+.reveal { font-size: 26px; font-weight: 800; margin: 10px 0; }
+
+.done { text-align: center; padding-top: 30px; }
+.done .stars { font-size: 56px; color: var(--star); letter-spacing: 6px; margin: 10px 0; }
+.done h1 { font-size: 34px; margin: 6px 0; }
+.done .pct { font-size: 48px; font-weight: 800; color: var(--primary); margin: 0; }
+.done p { color: var(--muted); margin: 0 0 24px; }
+.mistakes { text-align: left; }
+.mistakes li { margin: 0 0 10px; }
+
+.seg { display: flex; gap: 8px; margin: 8px 0 4px; }
+.seg button { flex: 1; border: 2px solid var(--line); border-radius: 12px; padding: 10px; font-size: 17px; font-weight: 700; background: var(--surface); }
+.seg button.on { border-color: var(--primary); background: var(--soft); color: var(--primary); }
+textarea { width: 100%; font: inherit; font-size: 14px; padding: 10px; border-radius: 12px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); min-height: 80px; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+var KEY = "italienska-v2";
+
+/* Kursinnehåll. Varje fras: ["italienska|alternativ", "svenska"]. Första italienska varianten visas; alla godkänns. */
+var LEVELS = [
+{ id: "n1", name: "Första stegen", cefr: "A1", lessons: [
+  { id: "halsningar", em: "👋", name: "Hälsningar",
+    tip: "Bland vänner säger man <b>ciao</b>. Till andra säger man <b>buongiorno</b> (fram till eftermiddagen) eller <b>buonasera</b> (från eftermiddagen). Bokstaven <b>c</b> uttalas ”tj” före e och i: <i>ciao</i> = ”tjao”. <b>gn</b> uttalas som ”nj”: <i>buongiorno</i> = ”bon-djorno”.",
+    items: [
+      ["Ciao", "Hej"],
+      ["Buongiorno", "God morgon / god dag"],
+      ["Buonasera", "God kväll"],
+      ["Buonanotte", "God natt"],
+      ["Arrivederci", "Adjö"],
+      ["A presto", "Vi ses snart"],
+      ["Grazie", "Tack"],
+      ["Grazie mille", "Tack så mycket"],
+      ["Prego", "Varsågod"],
+      ["Per favore", "Snälla (vid en begäran)"],
+      ["Scusi", "Ursäkta (artigt)"],
+      ["Sì", "Ja"],
+      ["No", "Nej"],
+      ["Come sta?", "Hur mår ni? (artigt)"],
+      ["Bene, grazie", "Bra, tack"]
+  ]},
+  { id: "presentera", em: "🙋", name: "Presentera dig",
+    tip: "Verbet <b>essere</b> (att vara): io <b>sono</b>, tu <b>sei</b>, lui/lei <b>è</b>, noi <b>siamo</b>, voi <b>siete</b>, loro <b>sono</b>. Ordet för ”jag” utelämnas oftast: <i>Sono svedese</i> = Jag är svensk. Adjektiv på -o får -a när de gäller en kvinna: <i>italiano → italiana</i>.",
+    items: [
+      ["Mi chiamo Anna", "Jag heter Anna"],
+      ["Come ti chiami?", "Vad heter du?"],
+      ["Piacere", "Trevligt att träffas"],
+      ["Sono svedese", "Jag är svensk"],
+      ["Sono di Stoccolma", "Jag är från Stockholm"],
+      ["Di dove sei?", "Var kommer du ifrån?"],
+      ["Lui è italiano", "Han är italienare"],
+      ["Lei è italiana", "Hon är italienska"],
+      ["Siamo amici", "Vi är vänner"],
+      ["Sei sposata?", "Är du gift? (till en kvinna)"],
+      ["Sono in pensione", "Jag är pensionär"],
+      ["Abito in Svezia", "Jag bor i Sverige"],
+      ["Parlo un po' di italiano", "Jag pratar lite italienska"],
+      ["Questo è mio marito", "Det här är min man"]
+  ]},
+  { id: "siffror", em: "🔢", name: "Siffror och ålder",
+    tip: "1–10: uno, due, tre, quattro, cinque, sei, sette, otto, nove, dieci. Sedan undici (11), dodici (12) … venti (20). Ålder säger man med <b>avere</b> (att ha): <i>Ho sessant'anni</i> = ”jag har sextio år”. Avere: <b>ho, hai, ha, abbiamo, avete, hanno</b>. H uttalas aldrig på italienska.",
+    items: [
+      ["Uno, due, tre", "Ett, två, tre"],
+      ["Quattro, cinque, sei", "Fyra, fem, sex"],
+      ["Sette, otto, nove, dieci", "Sju, åtta, nio, tio"],
+      ["Undici, dodici, tredici", "Elva, tolv, tretton"],
+      ["Quindici", "Femton"],
+      ["Venti", "Tjugo"],
+      ["Trenta, quaranta, cinquanta", "Trettio, fyrtio, femtio"],
+      ["Sessanta, settanta", "Sextio, sjuttio"],
+      ["Cento", "Hundra"],
+      ["Quanti anni hai?", "Hur gammal är du?"],
+      ["Ho sessantacinque anni", "Jag är sextiofem år"],
+      ["Ho due figli", "Jag har två barn"],
+      ["Mia figlia ha trent'anni", "Min dotter är trettio år"]
+  ]},
+  { id: "mat", em: "🍝", name: "Mat och dryck",
+    tip: "Substantiv är maskulina eller feminina. Bestämd artikel: <b>il</b> (maskulin), <b>la</b> (feminin), <b>l'</b> före vokal, <b>lo</b> före s+konsonant och z. Obestämd: <b>un</b>, <b>una</b>, <b>un'</b>, <b>uno</b>. Ord på -o är oftast maskulina, ord på -a oftast feminina.",
+    items: [
+      ["Il pane", "Brödet"],
+      ["La pizza", "Pizzan"],
+      ["Il vino rosso", "Rödvinet"],
+      ["Un caffè, per favore", "En kaffe, tack"],
+      ["Un bicchiere d'acqua", "Ett glas vatten"],
+      ["Una birra", "En öl"],
+      ["Lo zucchero", "Sockret"],
+      ["Il formaggio", "Osten"],
+      ["La mela", "Äpplet"],
+      ["Il pesce e la carne", "Fisken och köttet"],
+      ["Un gelato al cioccolato", "En chokladglass"],
+      ["Mi piace il gelato", "Jag tycker om glass"],
+      ["Acqua naturale o frizzante?", "Vatten utan eller med kolsyra?"],
+      ["Ho fame", "Jag är hungrig"],
+      ["Ho sete", "Jag är törstig"]
+  ]},
+  { id: "familj", em: "👨‍👩‍👧", name: "Familjen",
+    tip: "Possessiva pronomen: <b>mio/mia</b> (min), <b>tuo/tua</b> (din), <b>suo/sua</b> (hans/hennes). Med släktord i singular används ingen artikel: <i>mia madre</i>. Men i plural: <i>i miei figli</i> (mina barn).",
+    items: [
+      ["Mia madre", "Min mamma"],
+      ["Mio padre", "Min pappa"],
+      ["Mio figlio", "Min son"],
+      ["Mia figlia", "Min dotter"],
+      ["Mio fratello", "Min bror"],
+      ["Mia sorella", "Min syster"],
+      ["Mio marito", "Min man"],
+      ["Mia moglie", "Min fru"],
+      ["I miei figli", "Mina barn"],
+      ["I miei nipoti", "Mina barnbarn"],
+      ["La nonna", "Mormor / farmor"],
+      ["Il nonno", "Morfar / farfar"],
+      ["Tua sorella è simpatica", "Din syster är trevlig"],
+      ["Ho un fratello e due sorelle", "Jag har en bror och två systrar"],
+      ["Come si chiama tuo figlio?", "Vad heter din son?"]
+  ]},
+  { id: "adjektiv", em: "🎨", name: "Färger och adjektiv",
+    tip: "Adjektiv står oftast <i>efter</i> substantivet och böjs efter det: <i>la macchina rossa</i>, <i>il gatto nero</i>. Adjektiv på -e är lika i båda genus: <i>grande, verde</i>. Plural: -o → <b>-i</b>, -a → <b>-e</b>, -e → <b>-i</b>.",
+    items: [
+      ["Rosso, bianco, verde", "Röd, vit, grön"],
+      ["Giallo, blu, nero", "Gul, blå, svart"],
+      ["La casa è grande", "Huset är stort"],
+      ["La macchina rossa", "Den röda bilen"],
+      ["Il gatto nero", "Den svarta katten"],
+      ["Il cane è piccolo", "Hunden är liten"],
+      ["Una bella giornata", "En vacker dag"],
+      ["Il mare è blu", "Havet är blått"],
+      ["Sono stanca|Sono stanco", "Jag är trött"],
+      ["Sono contenta|Sono contento", "Jag är glad"],
+      ["La pizza è buona", "Pizzan är god"],
+      ["Il caffè è caldo", "Kaffet är varmt"],
+      ["L'acqua è fredda", "Vattnet är kallt"],
+      ["Un vestito nuovo", "En ny klänning"]
+  ]},
+  { id: "plural", em: "🍎", name: "Plural",
+    tip: "Plural: -o → <b>-i</b> (libro → libri), -a → <b>-e</b> (casa → case), -e → <b>-i</b> (fiore → fiori). Artiklar i plural: <b>i</b> (maskulin), <b>gli</b> (maskulin före vokal, s+konsonant och z) och <b>le</b> (feminin). Ord som slutar på betonad vokal ändras inte: <i>il caffè → i caffè</i>.",
+    items: [
+      ["Il libro, i libri", "Boken, böckerna"],
+      ["La casa, le case", "Huset, husen"],
+      ["Il fiore, i fiori", "Blomman, blommorna"],
+      ["L'amico, gli amici", "Vännen, vännerna"],
+      ["L'amica, le amiche", "Väninnan, väninnorna"],
+      ["Lo studente, gli studenti", "Studenten, studenterna"],
+      ["Due caffè", "Två kaffe"],
+      ["Tre pizze", "Tre pizzor"],
+      ["Le mele sono rosse", "Äpplena är röda"],
+      ["I bambini sono stanchi", "Barnen är trötta"],
+      ["Gli occhi azzurri", "De blå ögonen"],
+      ["Le città italiane", "De italienska städerna"],
+      ["Ci sono molti turisti", "Det finns många turister"]
+  ]},
+  { id: "restaurang", em: "🍽️", name: "På restaurangen",
+    tip: "<b>Vorrei</b> (jag skulle vilja) är det artigaste sättet att beställa. <b>Prendo</b> = jag tar. Notan heter <b>il conto</b>. På många restauranger betalar man <i>il coperto</i> (kuvertavgift). Dricks är inte obligatoriskt.",
+    items: [
+      ["Un tavolo per due, per favore", "Ett bord för två, tack"],
+      ["Vorrei un caffè", "Jag skulle vilja ha en kaffe"],
+      ["Prendo la pasta", "Jag tar pastan"],
+      ["Cosa mi consiglia?", "Vad rekommenderar ni?"],
+      ["Il menù, per favore", "Menyn, tack"],
+      ["Sono vegetariana|Sono vegetariano", "Jag är vegetarian"],
+      ["Senza glutine", "Utan gluten"],
+      ["Un bicchiere di vino bianco", "Ett glas vitt vin"],
+      ["Il conto, per favore", "Notan, tack"],
+      ["Posso pagare con la carta?", "Kan jag betala med kort?"],
+      ["Era tutto buonissimo", "Allt var jättegott"],
+      ["Avete un tavolo libero?", "Har ni ett ledigt bord?"],
+      ["Che cosa prendete?", "Vad tar ni? (till flera)"],
+      ["Da bere?", "Något att dricka?"]
+  ]}
+]},
+{ id: "n2", name: "Vardagen", cefr: "A1–A2", lessons: [
+  { id: "verb_are", em: "🗣️", name: "Verb på -are",
+    tip: "Regelbundna verb på <b>-are</b>, t.ex. <i>parlare</i> (prata): parl<b>o</b>, parl<b>i</b>, parl<b>a</b>, parl<b>iamo</b>, parl<b>ate</b>, parl<b>ano</b>. Likadant: abitare (bo), lavorare (arbeta), mangiare (äta), studiare (studera), cucinare (laga mat), comprare (köpa).",
+    items: [
+      ["Parlo italiano", "Jag pratar italienska"],
+      ["Parli svedese?", "Pratar du svenska?"],
+      ["Lei parla inglese", "Hon pratar engelska"],
+      ["Abitiamo a Roma", "Vi bor i Rom"],
+      ["Dove abitate?", "Var bor ni?"],
+      ["Lavoro in un ufficio", "Jag arbetar på ett kontor"],
+      ["Mangiamo alle otto", "Vi äter klockan åtta"],
+      ["I bambini giocano in giardino", "Barnen leker i trädgården"],
+      ["Studio l'italiano ogni giorno", "Jag studerar italienska varje dag"],
+      ["Mio marito cucina molto bene", "Min man lagar mat mycket bra"],
+      ["Ascolto la musica", "Jag lyssnar på musik"],
+      ["Aspetti l'autobus?", "Väntar du på bussen?"],
+      ["Compro il pane", "Jag köper bröd"]
+  ]},
+  { id: "verb_ere_ire", em: "📖", name: "Verb på -ere och -ire",
+    tip: "<b>-ere</b>: prend<b>o</b>, prend<b>i</b>, prend<b>e</b>, prend<b>iamo</b>, prend<b>ete</b>, prend<b>ono</b>.<br><b>-ire</b>: dorm<b>o</b>, dorm<b>i</b>, dorm<b>e</b>, dorm<b>iamo</b>, dorm<b>ite</b>, dorm<b>ono</b>.<br>Vissa -ire-verb lägger till <b>-isc-</b>: <i>capire → capisco, capisci, capisce, capiamo, capite, capiscono</i>. Likadant: finire, preferire.",
+    items: [
+      ["Prendo il treno", "Jag tar tåget"],
+      ["Leggi un libro?", "Läser du en bok?"],
+      ["Scrivo una lettera", "Jag skriver ett brev"],
+      ["Vediamo un film", "Vi ser en film"],
+      ["Mio marito dorme", "Min man sover"],
+      ["Partiamo domani", "Vi åker i morgon"],
+      ["Apro la finestra", "Jag öppnar fönstret"],
+      ["Non capisco", "Jag förstår inte"],
+      ["Capisci l'italiano?", "Förstår du italienska?"],
+      ["Preferisco il tè", "Jag föredrar te"],
+      ["A che ora finisci?", "Vilken tid slutar du?"],
+      ["Loro vivono in Italia", "De bor i Italien"],
+      ["Chiudono alle sette", "De stänger klockan sju"],
+      ["Sento la musica", "Jag hör musiken"]
+  ]},
+  { id: "oregelbundna", em: "🚶", name: "Oregelbundna verb",
+    tip: "<b>andare</b> (gå/åka): vado, vai, va, andiamo, andate, vanno<br><b>fare</b> (göra): faccio, fai, fa, facciamo, fate, fanno<br><b>stare</b> (må/vara): sto, stai, sta …<br><b>venire</b> (komma): vengo, vieni, viene …<br><b>volere</b> (vilja): voglio, vuoi, vuole …<br><b>potere</b> (kunna): posso, puoi, può …<br><b>dovere</b> (måste): devo, devi, deve …",
+    items: [
+      ["Vado al mercato", "Jag går till marknaden"],
+      ["Dove vai?", "Vart ska du?"],
+      ["Andiamo al mare", "Vi åker till havet"],
+      ["Che cosa fai?", "Vad gör du?"],
+      ["Faccio una passeggiata", "Jag tar en promenad"],
+      ["Fa caldo oggi", "Det är varmt i dag"],
+      ["Voglio imparare l'italiano", "Jag vill lära mig italienska"],
+      ["Posso entrare?", "Får jag komma in?"],
+      ["Devo andare", "Jag måste gå"],
+      ["Vieni con me?", "Följer du med mig?"],
+      ["Vengo dalla Svezia", "Jag kommer från Sverige"],
+      ["Come stai?", "Hur mår du?"],
+      ["Sto bene, grazie", "Jag mår bra, tack"],
+      ["Puoi ripetere, per favore?", "Kan du upprepa, snälla?"],
+      ["Sai dov'è la stazione?", "Vet du var stationen är?"]
+  ]},
+  { id: "tid", em: "🕐", name: "Klockan och veckodagar",
+    tip: "<i>Che ore sono?</i> = Vad är klockan? Svar: <i>Sono le tre</i> (klockan är tre), men <i>È l'una</i> (klockan är ett). Halv = <b>e mezza</b> (efter timmen!): <i>le otto e mezza</i> = halv nio. Kvart över = <b>e un quarto</b>. Veckodagar skrivs med liten bokstav: lunedì, martedì, mercoledì, giovedì, venerdì, sabato, domenica.",
+    items: [
+      ["Che ore sono?", "Vad är klockan?"],
+      ["Sono le tre", "Klockan är tre"],
+      ["È l'una", "Klockan är ett"],
+      ["Sono le otto e mezza", "Klockan är halv nio"],
+      ["Sono le dieci e un quarto", "Klockan är kvart över tio"],
+      ["A che ora apre il museo?", "När öppnar museet?"],
+      ["Lunedì, martedì, mercoledì", "Måndag, tisdag, onsdag"],
+      ["Giovedì, venerdì", "Torsdag, fredag"],
+      ["Sabato e domenica", "Lördag och söndag"],
+      ["Oggi è venerdì", "I dag är det fredag"],
+      ["Ci vediamo domani", "Vi ses i morgon"],
+      ["Il fine settimana", "Helgen"],
+      ["La mattina bevo il caffè", "På morgonen dricker jag kaffe"],
+      ["Di solito ceno alle sette", "Jag brukar äta middag klockan sju"]
+  ]},
+  { id: "vader", em: "🌦️", name: "Månader och väder",
+    tip: "Väder uttrycks ofta med <b>fare</b>: <i>fa caldo</i> (det är varmt), <i>fa freddo</i> (det är kallt), <i>fa bel tempo</i> (det är fint väder). Men: <i>piove</i> (det regnar), <i>nevica</i> (det snöar), <i>c'è il sole</i> (solen skiner). Månader skrivs med liten bokstav.",
+    items: [
+      ["Gennaio, febbraio, marzo", "Januari, februari, mars"],
+      ["Aprile, maggio, giugno", "April, maj, juni"],
+      ["Luglio, agosto, settembre", "Juli, augusti, september"],
+      ["Ottobre, novembre, dicembre", "Oktober, november, december"],
+      ["La primavera e l'estate", "Våren och sommaren"],
+      ["L'autunno e l'inverno", "Hösten och vintern"],
+      ["Che tempo fa?", "Hur är vädret?"],
+      ["Fa freddo", "Det är kallt"],
+      ["Piove", "Det regnar"],
+      ["Oggi c'è il sole", "I dag skiner solen"],
+      ["In Svezia nevica in inverno", "I Sverige snöar det på vintern"],
+      ["Il mio compleanno è a maggio", "Min födelsedag är i maj"],
+      ["In agosto andiamo in vacanza", "I augusti åker vi på semester"],
+      ["Domani farà bel tempo", "I morgon blir det fint väder"]
+  ]},
+  { id: "staden", em: "🗺️", name: "Hitta vägen",
+    tip: "<b>C'è</b> = det finns (singular), <b>ci sono</b> = det finns (plural). <b>Dov'è …?</b> = Var är …? Vägbeskrivningar: <i>a destra</i> (till höger), <i>a sinistra</i> (till vänster), <i>sempre dritto</i> (rakt fram), <i>vicino</i> (nära), <i>lontano</i> (långt bort).",
+    items: [
+      ["Scusi, dov'è la stazione?", "Ursäkta, var är stationen?"],
+      ["C'è una farmacia qui vicino?", "Finns det ett apotek här i närheten?"],
+      ["Ci sono due chiese", "Det finns två kyrkor"],
+      ["Giri a destra", "Sväng till höger (artigt)"],
+      ["Vada sempre dritto", "Gå rakt fram (artigt)"],
+      ["È a sinistra", "Det är till vänster"],
+      ["È lontano?", "Är det långt?"],
+      ["No, è vicino", "Nej, det är nära"],
+      ["La fermata dell'autobus", "Busshållplatsen"],
+      ["Il centro storico", "Gamla stan"],
+      ["Mi sono persa|Mi sono perso", "Jag har gått vilse"],
+      ["Accanto alla banca", "Bredvid banken"],
+      ["Davanti al museo", "Framför museet"],
+      ["Quanto tempo ci vuole a piedi?", "Hur lång tid tar det till fots?"]
+  ]},
+  { id: "prepositioner", em: "📦", name: "Prepositioner",
+    tip: "<b>a, da, di, in, su</b> smälter ihop med bestämd artikel:<br>a + il = <b>al</b>, a + la = <b>alla</b><br>di + il = <b>del</b>, di + la = <b>della</b><br>in + il = <b>nel</b>, in + la = <b>nella</b><br>su + il = <b>sul</b>, su + la = <b>sulla</b><br>da + il = <b>dal</b>, da + la = <b>dalla</b><br><b>da</b> + person = hos/till: <i>vado dal medico</i>.",
+    items: [
+      ["Vado al supermercato", "Jag går till snabbköpet"],
+      ["Andiamo alla spiaggia", "Vi går till stranden"],
+      ["Il libro è sul tavolo", "Boken ligger på bordet"],
+      ["Le chiavi sono nella borsa", "Nycklarna är i väskan"],
+      ["Il gatto dorme sul letto", "Katten sover på sängen"],
+      ["Vengo dal medico", "Jag kommer från läkaren"],
+      ["Vado dal dentista", "Jag går till tandläkaren"],
+      ["La casa dei miei genitori", "Mina föräldrars hus"],
+      ["Il nome della strada", "Gatans namn"],
+      ["Il latte è nel frigorifero", "Mjölken står i kylskåpet"],
+      ["Abito al terzo piano", "Jag bor på tredje våningen"],
+      ["Il treno parte dal binario due", "Tåget går från spår två"],
+      ["Metto lo zucchero nel caffè", "Jag tar socker i kaffet"]
+  ]},
+  { id: "shopping", em: "🛍️", name: "Handla och kläder",
+    tip: "<b>Questo/questa</b> = den här, <b>quello/quella</b> = den där. <i>Quanto costa?</i> (en sak) men <i>Quanto costano?</i> (flera). Större tal: cinquanta (50), cento (100), duecento (200), cinquecento (500), mille (1000), duemila (2000). Storlek = <b>la taglia</b>, skostorlek = <b>il numero</b>.",
+    items: [
+      ["Quanto costa questa borsa?", "Hur mycket kostar den här väskan?"],
+      ["Quanto costano queste scarpe?", "Hur mycket kostar de här skorna?"],
+      ["Costa venti euro", "Den kostar tjugo euro"],
+      ["È troppo caro", "Det är för dyrt"],
+      ["Posso provare questo vestito?", "Kan jag prova den här klänningen?"],
+      ["Che taglia porta?", "Vilken storlek har ni?"],
+      ["Porto la quaranta", "Jag har storlek fyrtio"],
+      ["Avete una taglia più piccola?", "Har ni en mindre storlek?"],
+      ["Quella giacca blu", "Den där blå jackan"],
+      ["Lo prendo", "Jag tar den"],
+      ["Sto solo guardando, grazie", "Jag tittar bara, tack"],
+      ["Dove sono i camerini?", "Var är provrummen?"],
+      ["Un chilo di pomodori", "Ett kilo tomater"],
+      ["Cinquecento grammi di formaggio", "Femhundra gram ost"]
+  ]}
+]},
+{ id: "n3", name: "Berätta om dig själv", cefr: "A2", lessons: [
+  { id: "reflexiva", em: "⏰", name: "Vardagsrutiner",
+    tip: "Reflexiva verb har ett pronomen före verbet: <b>mi</b> alzo, <b>ti</b> alzi, <b>si</b> alza, <b>ci</b> alziamo, <b>vi</b> alzate, <b>si</b> alzano. Exempel: <i>alzarsi</i> (stiga upp), <i>svegliarsi</i> (vakna), <i>vestirsi</i> (klä på sig), <i>riposarsi</i> (vila sig), <i>sentirsi</i> (må).",
+    items: [
+      ["Mi alzo alle sette", "Jag stiger upp klockan sju"],
+      ["A che ora ti svegli?", "Vilken tid vaknar du?"],
+      ["Mi lavo i denti", "Jag borstar tänderna"],
+      ["Mi vesto e faccio colazione", "Jag klär på mig och äter frukost"],
+      ["Mio marito si fa la barba", "Min man rakar sig"],
+      ["Ci riposiamo dopo pranzo", "Vi vilar oss efter lunch"],
+      ["Come si chiama questa strada?", "Vad heter den här gatan?"],
+      ["Mi sento bene", "Jag mår bra"],
+      ["Non mi ricordo", "Jag kommer inte ihåg"],
+      ["Si divertono molto", "De har jättekul"],
+      ["Mi preparo per uscire", "Jag gör mig i ordning för att gå ut"],
+      ["La sera mi rilasso", "På kvällen kopplar jag av"],
+      ["Vado a letto alle undici", "Jag går och lägger mig klockan elva"],
+      ["Mi addormento subito", "Jag somnar direkt"]
+  ]},
+  { id: "passato_avere", em: "⏮️", name: "Dåtid med avere",
+    tip: "<b>Passato prossimo</b> är den vanliga dåtiden i talspråk: <b>avere</b> + particip: <i>ho mangiato</i> (jag har ätit / jag åt). Particip: -are → <b>-ato</b>, -ere → <b>-uto</b>, -ire → <b>-ito</b>. Oregelbundna: fare → <b>fatto</b>, vedere → <b>visto</b>, prendere → <b>preso</b>, leggere → <b>letto</b>, scrivere → <b>scritto</b>, bere → <b>bevuto</b>.",
+    items: [
+      ["Ho mangiato la pizza", "Jag åt pizza"],
+      ["Hai dormito bene?", "Har du sovit gott?"],
+      ["Abbiamo visitato Firenze", "Vi besökte Florens"],
+      ["Ieri ho lavorato tutto il giorno", "I går arbetade jag hela dagen"],
+      ["Ho visto un bel film", "Jag såg en bra film"],
+      ["Che cosa hai fatto ieri sera?", "Vad gjorde du i går kväll?"],
+      ["Ho letto il giornale", "Jag läste tidningen"],
+      ["Mia figlia mi ha scritto", "Min dotter har skrivit till mig"],
+      ["Abbiamo preso un taxi", "Vi tog en taxi"],
+      ["Hanno bevuto troppo vino", "De drack för mycket vin"],
+      ["Non ho capito", "Jag förstod inte"],
+      ["Ho comprato un regalo per mio nipote", "Jag köpte en present till mitt barnbarn"],
+      ["Avete già mangiato?", "Har ni redan ätit?"],
+      ["La settimana scorsa ho chiamato mia sorella", "Förra veckan ringde jag min syster"]
+  ]},
+  { id: "passato_essere", em: "🚆", name: "Dåtid med essere",
+    tip: "Rörelseverb och verb för förändring bildar dåtid med <b>essere</b>: andare, venire, partire, arrivare, uscire, tornare, restare, nascere, diventare, succedere – och alla reflexiva verb. Participet böjs efter subjektet: <i>sono andato</i> (man), <i>sono andata</i> (kvinna), <i>siamo andati</i> (vi).",
+    items: [
+      ["Sono andata a Roma|Sono andato a Roma", "Jag åkte till Rom"],
+      ["Mia figlia è arrivata ieri", "Min dotter kom i går"],
+      ["Siamo tornati a casa tardi", "Vi kom hem sent"],
+      ["A che ora sei uscita?|A che ora sei uscito?", "Vilken tid gick du ut?"],
+      ["Il treno è partito in ritardo", "Tåget avgick försenat"],
+      ["Sono nata in Svezia|Sono nato in Svezia", "Jag föddes i Sverige"],
+      ["Siamo rimasti a casa", "Vi stannade hemma"],
+      ["Sei mai stata in Sicilia?|Sei mai stato in Sicilia?", "Har du någonsin varit på Sicilien?"],
+      ["Mi sono svegliata presto|Mi sono svegliato presto", "Jag vaknade tidigt"],
+      ["Ci siamo divertiti molto", "Vi hade väldigt roligt"],
+      ["È diventato nonno", "Han har blivit farfar"],
+      ["Le ragazze sono venute alla festa", "Flickorna kom till festen"],
+      ["Che cosa è successo?|Cos'è successo?|Che cos'è successo?", "Vad har hänt?"]
+  ]},
+  { id: "halsa", em: "🩺", name: "Kroppen och hälsan",
+    tip: "<b>Mi fa male …</b> = Det gör ont i … (en sak): <i>mi fa male la testa</i>. Flera: <i>mi fanno male i piedi</i>. <b>Ho mal di …</b> är också vanligt: <i>ho mal di testa</i>, <i>ho mal di denti</i>. Apotek = <i>la farmacia</i>, läkare = <i>il medico</i>.",
+    items: [
+      ["Mi fa male la testa", "Jag har ont i huvudet"],
+      ["Mi fanno male i piedi", "Jag har ont i fötterna"],
+      ["Ho mal di gola", "Jag har ont i halsen"],
+      ["Ho la febbre", "Jag har feber"],
+      ["Ho bisogno di un medico", "Jag behöver en läkare"],
+      ["Sono allergica alle noci|Sono allergico alle noci", "Jag är allergisk mot nötter"],
+      ["Prendo queste medicine ogni giorno", "Jag tar de här medicinerna varje dag"],
+      ["Ha qualcosa per la tosse?", "Har ni något mot hosta?"],
+      ["Mi sono fatta male al ginocchio|Mi sono fatto male al ginocchio", "Jag har gjort illa knät"],
+      ["Il braccio, la mano, la gamba", "Armen, handen, benet"],
+      ["Gli occhi, il naso, la bocca", "Ögonen, näsan, munnen"],
+      ["Chiami un'ambulanza!", "Ring efter en ambulans! (artigt)"],
+      ["Come si sente oggi?", "Hur mår ni i dag?"],
+      ["Mi sento meglio", "Jag mår bättre"]
+  ]},
+  { id: "objektspronomen", em: "🎯", name: "Objektspronomen",
+    tip: "Direkta objektspronomen står före verbet: <b>mi</b> (mig), <b>ti</b> (dig), <b>lo</b> (honom/den), <b>la</b> (henne/den; <b>La</b> = er, artigt), <b>ci</b> (oss), <b>vi</b> (er), <b>li</b> (dem, maskulin), <b>le</b> (dem, feminin). <i>Conosci Marco? Sì, lo conosco.</i> Med infinitiv hängs pronomenet på: <i>aiutarmi</i>.",
+    items: [
+      ["Lo conosco", "Jag känner honom"],
+      ["La vedo domani", "Jag träffar henne i morgon"],
+      ["Ti amo", "Jag älskar dig"],
+      ["Mi senti?", "Hör du mig?"],
+      ["Ci aspettano alla stazione", "De väntar på oss vid stationen"],
+      ["Dove sono le chiavi? Non le trovo", "Var är nycklarna? Jag hittar dem inte"],
+      ["Il caffè lo prendo senza zucchero", "Kaffet tar jag utan socker"],
+      ["Li chiamo stasera", "Jag ringer dem i kväll"],
+      ["L'ho già visto", "Jag har redan sett den"],
+      ["Hai comprato il pane? Sì, l'ho comprato", "Har du köpt bröd? Ja, jag har köpt det"],
+      ["La ringrazio", "Jag tackar er (artigt)"],
+      ["Vi accompagno a casa", "Jag följer er hem"],
+      ["Puoi aiutarmi?|Mi puoi aiutare?", "Kan du hjälpa mig?"]
+  ]},
+  { id: "piacere", em: "❤️", name: "Tycka om – piacere",
+    tip: "<b>Mi piace</b> betyder ordagrant ”det behagar mig”. En sak: <i>mi piace il vino</i>. Flera: <i>mi piacciono i fiori</i>. Indirekta pronomen: <b>mi</b> (till mig), <b>ti</b>, <b>gli</b> (till honom), <b>le</b> (till henne), <b>Le</b> (till er, artigt), <b>ci</b>, <b>vi</b>, <b>gli</b> (till dem). <i>Mi manchi</i> = jag saknar dig.",
+    items: [
+      ["Mi piace il vino rosso", "Jag tycker om rödvin"],
+      ["Mi piacciono i fiori", "Jag tycker om blommor"],
+      ["Ti piace cucinare?", "Tycker du om att laga mat?"],
+      ["A mio marito piace il calcio", "Min man gillar fotboll"],
+      ["Gli piace leggere", "Han tycker om att läsa"],
+      ["Le piacciono i gatti", "Hon tycker om katter"],
+      ["Non mi piace il freddo", "Jag tycker inte om kyla"],
+      ["Ci piace molto l'Italia", "Vi tycker mycket om Italien"],
+      ["Ti telefono stasera", "Jag ringer dig i kväll"],
+      ["Gli ho mandato un messaggio", "Jag skickade ett meddelande till honom"],
+      ["Le ho regalato un libro", "Jag gav henne en bok i present"],
+      ["Mi è piaciuto molto il concerto", "Jag tyckte mycket om konserten"],
+      ["Mi manchi", "Jag saknar dig"],
+      ["Che cosa ti serve?", "Vad behöver du?"]
+  ]},
+  { id: "resa", em: "✈️", name: "På resa",
+    tip: "Användbara ord: <i>il biglietto</i> (biljetten), <i>andata e ritorno</i> (tur och retur), <i>il binario</i> (spåret), <i>la prenotazione</i> (bokningen), <i>la camera</i> (hotellrummet), <i>il volo</i> (flyget). Regionaltågsbiljetter ska ibland stämplas (<i>convalidare</i>) före resan.",
+    items: [
+      ["Un biglietto per Napoli, per favore", "En biljett till Neapel, tack"],
+      ["Andata e ritorno", "Tur och retur"],
+      ["Da quale binario parte il treno?", "Från vilket spår går tåget?"],
+      ["Il treno è in ritardo", "Tåget är försenat"],
+      ["Ho prenotato una camera doppia", "Jag har bokat ett dubbelrum"],
+      ["La colazione è inclusa?", "Ingår frukost?"],
+      ["A che ora dobbiamo lasciare la camera?", "Vilken tid måste vi lämna rummet?"],
+      ["Il mio volo è stato cancellato", "Mitt flyg har ställts in"],
+      ["Ho perso la valigia", "Jag har tappat bort resväskan"],
+      ["Dove si comprano i biglietti?", "Var köper man biljetter?"],
+      ["Vorrei noleggiare una macchina", "Jag skulle vilja hyra en bil"],
+      ["Quanto dista l'aeroporto?", "Hur långt är det till flygplatsen?"],
+      ["L'aria condizionata non funziona", "Luftkonditioneringen fungerar inte"],
+      ["Ci può chiamare un taxi?", "Kan ni ringa efter en taxi åt oss?"]
+  ]},
+  { id: "hemma", em: "🏠", name: "Hemmet och telefonen",
+    tip: "I telefon svarar man <b>Pronto?</b> Rum: <i>la cucina</i> (köket), <i>il soggiorno</i> (vardagsrummet), <i>la camera da letto</i> (sovrummet), <i>il bagno</i> (badrummet). <b>Ci vuole / ci vogliono</b> = det tar (tid) / det behövs.",
+    items: [
+      ["Pronto, chi parla?", "Hallå, vem är det?"],
+      ["Sono io, la mamma", "Det är jag, mamma"],
+      ["Posso parlare con Giulia?", "Kan jag prata med Giulia?"],
+      ["Un attimo, per favore", "Ett ögonblick, tack"],
+      ["Ti richiamo più tardi", "Jag ringer upp dig senare"],
+      ["Non ti sento bene", "Jag hör dig inte så bra"],
+      ["La cucina è piccola ma luminosa", "Köket är litet men ljust"],
+      ["Il soggiorno è accanto alla cucina", "Vardagsrummet ligger bredvid köket"],
+      ["Abbiamo tre camere da letto", "Vi har tre sovrum"],
+      ["Apparecchio la tavola", "Jag dukar bordet"],
+      ["Devo fare il bucato", "Jag måste tvätta"],
+      ["Ci vogliono due ore", "Det tar två timmar"],
+      ["Vieni a cena da noi sabato?", "Kommer du på middag hos oss på lördag?"]
+  ]}
+]},
+{ id: "n4", name: "Då och sedan", cefr: "A2–B1", lessons: [
+  { id: "imperfetto", em: "🕰️", name: "Imperfekt – hur det var",
+    tip: "<b>Imperfetto</b> beskriver hur något var eller brukade vara: <i>Quando ero piccola, abitavo in campagna</i>. Ändelser: -avo, -avi, -ava, -avamo, -avate, -avano (parlare → parlavo), -evo (avere → avevo), -ivo (dormire → dormivo). <b>Essere</b>: ero, eri, era, eravamo, eravate, erano. <b>Fare</b>: facevo.",
+    items: [
+      ["Quando ero piccola, abitavo in campagna|Quando ero piccolo, abitavo in campagna", "När jag var liten bodde jag på landet"],
+      ["Mia nonna faceva il pane", "Min mormor brukade baka bröd"],
+      ["Da bambina giocavo sempre fuori|Da bambino giocavo sempre fuori", "Som barn lekte jag alltid ute"],
+      ["Era una bella giornata", "Det var en vacker dag"],
+      ["Faceva freddo", "Det var kallt"],
+      ["Avevamo un cane", "Vi hade en hund"],
+      ["Ogni estate andavamo al mare", "Varje sommar åkte vi till havet"],
+      ["Mio padre lavorava in fabbrica", "Min pappa arbetade på en fabrik"],
+      ["La casa era vecchia ma bella", "Huset var gammalt men vackert"],
+      ["Che cosa facevi da giovane?", "Vad gjorde du när du var ung?"],
+      ["Leggevo molti libri", "Jag läste många böcker"],
+      ["C'era una volta un re", "Det var en gång en kung"],
+      ["Non sapevo che eri qui", "Jag visste inte att du var här"]
+  ]},
+  { id: "imp_vs_pass", em: "⚖️", name: "Imperfekt eller passato?",
+    tip: "<b>Imperfetto</b> = bakgrund, tillstånd, vanor (vad pågick?). <b>Passato prossimo</b> = en avslutad händelse (vad hände?). <i>Mentre <b>dormivo</b>, <b>è suonato</b> il telefono</i> – Medan jag sov ringde telefonen.",
+    items: [
+      ["Mentre dormivo, è suonato il telefono", "Medan jag sov ringde telefonen"],
+      ["Leggevo quando sei arrivato|Leggevo quando sei arrivata", "Jag läste när du kom"],
+      ["Pioveva, quindi siamo rimasti a casa", "Det regnade, så vi stannade hemma"],
+      ["Ero stanca e sono andata a letto|Ero stanco e sono andato a letto", "Jag var trött och gick och lade mig"],
+      ["Quando ho conosciuto mio marito, avevo vent'anni", "När jag träffade min man var jag tjugo år"],
+      ["Camminavo per strada e ho visto un amico", "Jag gick på gatan och såg en vän"],
+      ["Da piccola andavo sempre dai nonni|Da piccolo andavo sempre dai nonni", "Som liten åkte jag alltid till mor- och farföräldrarna"],
+      ["Ieri sono andata dal parrucchiere|Ieri sono andato dal parrucchiere", "I går gick jag till frisören"],
+      ["C'era tanta gente al mercato", "Det var mycket folk på marknaden"],
+      ["Non sono venuta perché ero malata|Non sono venuto perché ero malato", "Jag kom inte eftersom jag var sjuk"],
+      ["Abbiamo vissuto a Milano per dieci anni", "Vi bodde i Milano i tio år"],
+      ["Che tempo faceva in Sicilia?", "Hur var vädret på Sicilien?"],
+      ["Mentre cucinavo, i bambini guardavano la TV", "Medan jag lagade mat tittade barnen på tv"]
+  ]},
+  { id: "futuro", em: "🔮", name: "Futurum",
+    tip: "<b>Futuro</b>: parler<b>ò</b>, parler<b>ai</b>, parler<b>à</b>, parler<b>emo</b>, parler<b>ete</b>, parler<b>anno</b>. Oregelbundna: essere → <b>sarò</b>, avere → <b>avrò</b>, andare → <b>andrò</b>, fare → <b>farò</b>, venire → <b>verrò</b>, potere → <b>potrò</b>. Futurum används också för gissningar: <i>Saranno le tre</i> = Klockan är väl tre.",
+    items: [
+      ["Domani andrò al mercato", "I morgon ska jag gå till marknaden"],
+      ["L'anno prossimo visiteremo la Toscana", "Nästa år ska vi besöka Toscana"],
+      ["Ti chiamerò stasera", "Jag ska ringa dig i kväll"],
+      ["Sarà una bella giornata", "Det kommer att bli en vacker dag"],
+      ["Quando andrò in pensione, viaggerò molto", "När jag går i pension ska jag resa mycket"],
+      ["Pioverà tutto il fine settimana", "Det kommer att regna hela helgen"],
+      ["Avrò tempo sabato", "Jag kommer att ha tid på lördag"],
+      ["Verrete alla festa?", "Kommer ni till festen?"],
+      ["Farò del mio meglio", "Jag ska göra mitt bästa"],
+      ["Potremo vederci la settimana prossima", "Vi kan ses nästa vecka"],
+      ["Che ore sono? Saranno le tre", "Vad är klockan? Den är väl tre"],
+      ["Dove sarà Marco? Sarà a casa", "Var kan Marco vara? Han är nog hemma"],
+      ["Fra due settimane partiremo per Roma", "Om två veckor åker vi till Rom"]
+  ]},
+  { id: "jamforelser", em: "📈", name: "Jämförelser",
+    tip: "<b>più … di</b> = mer … än: <i>Roma è più grande di Firenze</i>. <b>meno … di</b> = mindre … än. <b>come</b> = lika … som. Superlativ: <i>la più bella</i> (den vackraste) eller <b>-issimo</b>: <i>bellissimo</i> (jättevacker). Oregelbundna: buono → <b>migliore</b> (bättre), cattivo → <b>peggiore</b> (sämre); bene → <b>meglio</b>, male → <b>peggio</b>.",
+    items: [
+      ["Roma è più grande di Firenze", "Rom är större än Florens"],
+      ["Il treno è meno caro dell'aereo", "Tåget är billigare än flyget"],
+      ["Mia sorella è più giovane di me", "Min syster är yngre än jag"],
+      ["Questo vino è migliore", "Det här vinet är bättre"],
+      ["Oggi sto meglio", "I dag mår jag bättre"],
+      ["È la città più bella d'Italia", "Det är Italiens vackraste stad"],
+      ["Il panorama è bellissimo", "Utsikten är jättevacker"],
+      ["La pasta era buonissima", "Pastan var jättegod"],
+      ["Lui è alto come suo padre", "Han är lika lång som sin pappa"],
+      ["È il peggior film dell'anno", "Det är årets sämsta film"],
+      ["Parli italiano meglio di me", "Du pratar italienska bättre än jag"],
+      ["Mi piace più il mare che la montagna", "Jag tycker mer om havet än om bergen"],
+      ["Sempre più persone imparano l'italiano", "Allt fler människor lär sig italienska"]
+  ]},
+  { id: "ci_ne", em: "🧩", name: "Småorden ci och ne",
+    tip: "<b>Ci</b> = dit/där: <i>Vai a Roma? Sì, ci vado domani.</i> Även i uttryck: <i>ci penso io</i> (jag fixar det), <i>ci vuole</i> (det krävs). <b>Ne</b> = av det/om det, ofta med mängder: <i>Quanti figli hai? Ne ho due.</i> <i>Che ne pensi?</i> = Vad tycker du om det?",
+    items: [
+      ["Vai spesso in Italia? Ci vado ogni anno", "Åker du ofta till Italien? Jag åker dit varje år"],
+      ["Ci sono stata tre volte|Ci sono stato tre volte", "Jag har varit där tre gånger"],
+      ["Ci penso io", "Jag fixar det"],
+      ["Non ci credo!", "Jag tror inte på det!"],
+      ["Quanti figli hai? Ne ho due", "Hur många barn har du? Jag har två"],
+      ["Vuoi del vino? Sì, ne prendo un po'", "Vill du ha vin? Ja, jag tar lite"],
+      ["Che ne pensi?", "Vad tycker du om det?"],
+      ["Ne parliamo domani", "Vi pratar om det i morgon"],
+      ["Non ne ho idea", "Jag har ingen aning"],
+      ["Hai la chiave? Sì, ce l'ho", "Har du nyckeln? Ja, jag har den"],
+      ["Ci vuole pazienza", "Det krävs tålamod"],
+      ["Me ne vado", "Jag går nu"],
+      ["Non ce la faccio più", "Jag orkar inte mer"]
+  ]},
+  { id: "gerundio", em: "🔄", name: "Håller på att …",
+    tip: "<b>Stare + gerundium</b> = hålla på att: <i>Sto mangiando</i>. Gerundium: -are → <b>-ando</b>, -ere/-ire → <b>-endo</b>. Oregelbundna: fare → <b>facendo</b>, bere → <b>bevendo</b>, dire → <b>dicendo</b>. <b>Stare per</b> + infinitiv = vara på väg att: <i>Sto per uscire</i>.",
+    items: [
+      ["Sto mangiando", "Jag håller på att äta"],
+      ["Che cosa stai facendo?", "Vad håller du på med?"],
+      ["Sta piovendo", "Det regnar (just nu)"],
+      ["Stiamo guardando un film", "Vi tittar på en film"],
+      ["Mio marito sta dormendo", "Min man sover just nu"],
+      ["Stavo per chiamarti", "Jag skulle precis ringa dig"],
+      ["Sto per uscire", "Jag ska precis gå ut"],
+      ["Il film sta per cominciare", "Filmen ska precis börja"],
+      ["Stavo leggendo quando sei arrivato|Stavo leggendo quando sei arrivata", "Jag satt och läste när du kom"],
+      ["Sto imparando l'italiano", "Jag håller på att lära mig italienska"],
+      ["Cosa stai dicendo?", "Vad är det du säger?"],
+      ["Studiando si impara", "Genom att studera lär man sig"],
+      ["Camminando per il centro, ho trovato un bel caffè", "När jag promenerade i centrum hittade jag ett trevligt kafé"]
+  ]},
+  { id: "arbete", em: "💼", name: "Arbete och studier",
+    tip: "Yrken: <i>l'insegnante</i> (läraren), <i>il medico</i>, <i>l'infermiera</i> (sjuksköterskan), <i>l'ingegnere</i>, <i>il commesso / la commessa</i> (expediten). <i>Che lavoro fai?</i> = Vad jobbar du med? <i>Faccio l'insegnante</i> = Jag är lärare. Pensionär = <i>pensionato / pensionata</i>.",
+    items: [
+      ["Che lavoro fai?", "Vad jobbar du med?"],
+      ["Faccio l'insegnante", "Jag är lärare"],
+      ["Ho lavorato come infermiera per trent'anni|Ho lavorato come infermiere per trent'anni", "Jag arbetade som sjuksköterska i trettio år"],
+      ["Adesso sono in pensione", "Nu är jag pensionär"],
+      ["Mio figlio lavora in banca", "Min son arbetar på en bank"],
+      ["Mia figlia studia medicina all'università", "Min dotter läser medicin på universitetet"],
+      ["Ho un colloquio di lavoro domani", "Jag har en anställningsintervju i morgon"],
+      ["Lo stipendio è basso", "Lönen är låg"],
+      ["Lavoro a tempo pieno", "Jag arbetar heltid"],
+      ["Il mio capo è molto simpatico", "Min chef är väldigt trevlig"],
+      ["Ho studiato economia", "Jag har studerat ekonomi"],
+      ["Cerco lavoro", "Jag söker jobb"],
+      ["Lavoro da casa due giorni alla settimana", "Jag jobbar hemifrån två dagar i veckan"]
+  ]},
+  { id: "asikter", em: "💭", name: "Åsikter och känslor",
+    tip: "Åsikter: <i>secondo me</i> (enligt mig), <i>penso di sì / di no</i> (jag tror det / jag tror inte det), <i>sono d'accordo</i> (jag håller med), <i>hai ragione / hai torto</i> (du har rätt / fel). Känslor: <i>sono felice</i>, <i>sono triste</i>, <i>sono preoccupata</i> (orolig), <i>ho paura</i> (jag är rädd).",
+    items: [
+      ["Secondo me, hai ragione", "Enligt mig har du rätt"],
+      ["Penso di sì", "Jag tror det"],
+      ["Penso di no", "Jag tror inte det"],
+      ["Sono d'accordo con te", "Jag håller med dig"],
+      ["Non sono d'accordo", "Jag håller inte med"],
+      ["Hai torto", "Du har fel"],
+      ["Sono felice di vederti", "Jag är glad att se dig"],
+      ["Sono un po' preoccupata|Sono un po' preoccupato", "Jag är lite orolig"],
+      ["Ho paura dei cani", "Jag är rädd för hundar"],
+      ["Mi dispiace molto", "Jag är verkligen ledsen"],
+      ["Che peccato!", "Vad synd!"],
+      ["Che bello!", "Vad härligt!"],
+      ["Sono stufa di aspettare|Sono stufo di aspettare", "Jag är trött på att vänta"],
+      ["Non vedo l'ora di vederti", "Jag längtar efter att träffa dig"]
+  ]}
+]},
+{ id: "n5", name: "Självständig", cefr: "B1", lessons: [
+  { id: "konditionalis", em: "🤔", name: "Konditionalis – skulle",
+    tip: "<b>Condizionale</b>: parler<b>ei</b>, parler<b>esti</b>, parler<b>ebbe</b>, parler<b>emmo</b>, parler<b>este</b>, parler<b>ebbero</b>. Oregelbundna som i futurum: <b>sarei</b>, <b>avrei</b>, <b>vorrei</b>, <b>potrei</b>, <b>dovrei</b>, <b>andrei</b>, <b>verrei</b>. Används för artiga önskemål, råd och rykten.",
+    items: [
+      ["Vorrei un'informazione", "Jag skulle vilja ha en upplysning"],
+      ["Potrebbe aiutarmi?|Mi potrebbe aiutare?", "Skulle ni kunna hjälpa mig?"],
+      ["Mi piacerebbe vivere in Italia", "Jag skulle gärna vilja bo i Italien"],
+      ["Dovresti riposarti", "Du borde vila dig"],
+      ["Sarebbe bello andare al mare", "Det skulle vara härligt att åka till havet"],
+      ["Al tuo posto, non lo farei", "I ditt ställe skulle jag inte göra det"],
+      ["Avresti un minuto?", "Skulle du ha en minut?"],
+      ["Verresti con me al cinema?", "Skulle du följa med mig på bio?"],
+      ["Mangerei volentieri una pizza", "Jag skulle gärna äta en pizza"],
+      ["Secondo i giornali, il ministro sarebbe malato", "Enligt tidningarna lär ministern vara sjuk"],
+      ["Avrei voluto chiamarti", "Jag skulle ha velat ringa dig"],
+      ["Saresti dovuto venire|Saresti dovuta venire", "Du borde ha kommit"],
+      ["Che cosa faresti con un milione?", "Vad skulle du göra med en miljon?"]
+  ]},
+  { id: "imperativ", em: "👉", name: "Imperativ",
+    tip: "Du-form: -are → <b>-a</b> (<i>parla!</i>), -ere/-ire → <b>-i</b> (<i>prendi! senti!</i>). Nekande du-form = <b>non + infinitiv</b>: <i>non toccare!</i> Artig form (Lei): <i>parli!, prenda!, senta!</i> Pronomen hängs på du-formen: <i>dimmi</i> (säg mig), <i>aspettami</i>. Oregelbundna: <i>vai, fai, di', dai, stai, abbi, sii</i>.",
+    items: [
+      ["Vieni qui!", "Kom hit!"],
+      ["Aspettami!", "Vänta på mig!"],
+      ["Non preoccuparti", "Oroa dig inte"],
+      ["Dimmi la verità", "Säg sanningen till mig"],
+      ["Mi dica", "Vad kan jag hjälpa till med? (artigt)"],
+      ["Senta, scusi", "Ursäkta mig (artigt, för att få uppmärksamhet)"],
+      ["Prenda la seconda strada a destra", "Ta den andra gatan till höger (artigt)"],
+      ["Non toccare!", "Rör inte!"],
+      ["Mangiamo!", "Nu äter vi!"],
+      ["Fate attenzione!", "Var försiktiga!"],
+      ["Abbi pazienza", "Ha tålamod"],
+      ["Si accomodi", "Var så god och sitt (artigt)"],
+      ["Chiudi la porta, per favore", "Stäng dörren, snälla"],
+      ["Dammi una mano", "Hjälp mig lite"]
+  ]},
+  { id: "kombinerade", em: "🔗", name: "Kombinerade pronomen",
+    tip: "När två pronomen kombineras blir mi → <b>me</b>, ti → <b>te</b>, ci → <b>ce</b>, vi → <b>ve</b>, och gli/le → <b>glie</b>: <i>me lo</i>, <i>te la</i>, <i>glielo</i> (det till honom/henne/er). <i>Me lo dai?</i> = Ger du mig den? Med <b>ne</b>: <i>me ne</i>, <i>te ne</i>.",
+    items: [
+      ["Me lo dai?", "Ger du mig den?"],
+      ["Te lo prometto", "Jag lovar dig det"],
+      ["Glielo dico subito", "Jag säger det till honom genast"],
+      ["Ce l'ha detto ieri", "Han sa det till oss i går"],
+      ["Te l'ho già detto", "Jag har redan sagt det till dig"],
+      ["Me ne ha parlato mia figlia", "Min dotter har berättat om det för mig"],
+      ["Puoi prestarmi la macchina? Sì, te la presto", "Kan du låna mig bilen? Ja, jag lånar ut den till dig"],
+      ["Gliel'ho spiegato tre volte", "Jag har förklarat det för henne tre gånger"],
+      ["Me lo può incartare?", "Kan ni slå in den åt mig?"],
+      ["Ve lo consiglio", "Jag rekommenderar det till er"],
+      ["Non me lo ricordo", "Jag kommer inte ihåg det"],
+      ["Te ne porto un po'", "Jag tar med lite åt dig"]
+  ]},
+  { id: "relativ", em: "🪢", name: "Relativpronomen",
+    tip: "<b>che</b> = som (subjekt och objekt): <i>la donna che parla</i>, <i>il libro che leggo</i>. Efter preposition används <b>cui</b>: <i>la città in cui abito</i>, <i>l'amica con cui parlo</i>. <b>quello che / ciò che</b> = det som: <i>Fai quello che vuoi</i>. <b>chi</b> = den som.",
+    items: [
+      ["La donna che parla è mia sorella", "Kvinnan som pratar är min syster"],
+      ["Il libro che leggo è molto bello", "Boken som jag läser är mycket bra"],
+      ["La città in cui abito è piccola", "Staden där jag bor är liten"],
+      ["L'amica con cui sono andata in vacanza|L'amica con cui sono andato in vacanza", "Väninnan som jag åkte på semester med"],
+      ["Il motivo per cui sono qui", "Anledningen till att jag är här"],
+      ["Fai quello che vuoi", "Gör vad du vill"],
+      ["Non capisco ciò che dici", "Jag förstår inte vad du säger"],
+      ["Chi dorme non piglia pesci", "Den som sover fångar inga fiskar"],
+      ["Il ristorante di cui ti ho parlato", "Restaurangen som jag berättade om för dig"],
+      ["La signora a cui ho dato le chiavi", "Damen som jag gav nycklarna till"],
+      ["È l'unica cosa che conta", "Det är det enda som betyder något"],
+      ["Tutto quello che ho", "Allt som jag har"]
+  ]},
+  { id: "konjunktiv", em: "🌀", name: "Konjunktiv presens",
+    tip: "<b>Congiuntivo</b> används efter åsikt, vilja, känsla och osäkerhet: <i>penso che</i>, <i>voglio che</i>, <i>spero che</i>, <i>è importante che</i>, och efter <i>benché</i>, <i>prima che</i>. -are → <b>-i</b> (che io parli), -ere/-ire → <b>-a</b> (che io prenda). Oregelbundna: essere → <b>sia</b>, avere → <b>abbia</b>, andare → <b>vada</b>, fare → <b>faccia</b>, venire → <b>venga</b>, stare → <b>stia</b>, sapere → <b>sappia</b>.",
+    items: [
+      ["Penso che sia vero", "Jag tror att det är sant"],
+      ["Spero che tu stia bene", "Jag hoppas att du mår bra"],
+      ["Voglio che tu venga con me", "Jag vill att du följer med mig"],
+      ["Credo che abbia ragione", "Jag tror att han har rätt"],
+      ["È importante che tu dorma", "Det är viktigt att du sover"],
+      ["Non penso che piova", "Jag tror inte att det regnar"],
+      ["Mi sembra che sia stanca", "Det verkar som att hon är trött"],
+      ["Bisogna che partiamo presto", "Vi måste åka tidigt"],
+      ["Benché sia tardi, resto ancora un po'", "Fast det är sent stannar jag en stund till"],
+      ["Prima che tu vada, ti devo dire una cosa", "Innan du går måste jag säga en sak till dig"],
+      ["Dubito che lo sappia", "Jag tvivlar på att han vet det"],
+      ["Sono contenta che tu sia qui|Sono contento che tu sia qui", "Jag är glad att du är här"],
+      ["Qualunque cosa succeda, ti aiuterò", "Vad som än händer så hjälper jag dig"]
+  ]},
+  { id: "si_passiv", em: "📰", name: "Man-form och passiv",
+    tip: "<b>Si</b> + verb = man: <i>In Italia si mangia bene</i>. Med plural: <i>si vendono case</i>. <b>Passiv</b> = essere + particip: <i>Il Colosseo è stato costruito …</i> (byggdes). <b>venire</b> kan ersätta essere: <i>Il museo viene chiuso alle sei</i>.",
+    items: [
+      ["In Italia si mangia bene", "I Italien äter man gott"],
+      ["Come si dice in italiano?", "Hur säger man det på italienska?"],
+      ["Si dice che domani pioverà", "Man säger att det ska regna i morgon"],
+      ["Qui non si fuma", "Här röker man inte"],
+      ["Si vendono appartamenti", "Lägenheter till salu"],
+      ["Non si sa mai", "Man vet aldrig"],
+      ["Il Colosseo è stato costruito quasi duemila anni fa", "Colosseum byggdes för nästan tvåtusen år sedan"],
+      ["La lettera è stata scritta da mia nonna", "Brevet skrevs av min mormor"],
+      ["Il museo viene chiuso alle sei", "Museet stängs klockan sex"],
+      ["Quando si è giovani, si è pieni di energia", "När man är ung är man full av energi"],
+      ["Il libro è stato tradotto in svedese", "Boken har översatts till svenska"],
+      ["Si può pagare con la carta?", "Kan man betala med kort?"]
+  ]},
+  { id: "samhalle", em: "🌍", name: "Samhälle och nyheter",
+    tip: "Ord för aktuella frågor: <i>il governo</i> (regeringen), <i>le elezioni</i> (valet), <i>l'ambiente</i> (miljön), <i>il cambiamento climatico</i> (klimatförändringen), <i>la disoccupazione</i> (arbetslösheten), <i>la sanità</i> (sjukvården), <i>lo sciopero</i> (strejken).",
+    items: [
+      ["Hai letto le notizie oggi?", "Har du läst nyheterna i dag?"],
+      ["Il governo ha approvato una nuova legge", "Regeringen har antagit en ny lag"],
+      ["Le elezioni si terranno a giugno", "Valet hålls i juni"],
+      ["Dobbiamo proteggere l'ambiente", "Vi måste skydda miljön"],
+      ["Il cambiamento climatico è un problema serio", "Klimatförändringen är ett allvarligt problem"],
+      ["I prezzi sono aumentati molto", "Priserna har ökat mycket"],
+      ["La disoccupazione giovanile è alta", "Ungdomsarbetslösheten är hög"],
+      ["La sanità pubblica funziona bene", "Den offentliga sjukvården fungerar bra"],
+      ["Ci sono troppe macchine in centro", "Det är för många bilar i centrum"],
+      ["Molti giovani lasciano il paese", "Många unga lämnar landet"],
+      ["È un tema molto discusso", "Det är ett mycket omdiskuterat ämne"],
+      ["Ho sentito alla radio che ci sarà uno sciopero", "Jag hörde på radion att det blir strejk"]
+  ]},
+  { id: "beratta", em: "📚", name: "Berätta en historia",
+    tip: "Bindeord gör berättelser levande: <i>prima</i> (först), <i>poi</i> (sedan), <i>dopo</i> (efter), <i>alla fine</i> (till slut), <i>mentre</i> (medan), <i>siccome</i> (eftersom), <i>quindi</i> (så), <i>però</i> (men), <i>invece</i> (däremot), <i>all'improvviso</i> (plötsligt), <i>appena</i> (så fort), <i>per fortuna</i> (som tur var).",
+    items: [
+      ["Prima abbiamo visitato il museo, poi siamo andati a pranzo", "Först besökte vi museet, sedan gick vi och åt lunch"],
+      ["All'improvviso ha cominciato a piovere", "Plötsligt började det regna"],
+      ["Siccome era tardi, abbiamo preso un taxi", "Eftersom det var sent tog vi en taxi"],
+      ["Alla fine tutto è andato bene", "Till slut gick allt bra"],
+      ["Volevo uscire, però ero troppo stanca|Volevo uscire, però ero troppo stanco", "Jag ville gå ut, men jag var för trött"],
+      ["Lui ama il mare, io invece preferisco la montagna", "Han älskar havet, jag däremot föredrar bergen"],
+      ["Non avevo l'ombrello, quindi mi sono bagnata|Non avevo l'ombrello, quindi mi sono bagnato", "Jag hade inget paraply, så jag blev blöt"],
+      ["Dopo cena abbiamo fatto una passeggiata", "Efter middagen tog vi en promenad"],
+      ["Per fortuna, qualcuno mi ha aiutata|Per fortuna, qualcuno mi ha aiutato", "Som tur var hjälpte någon mig"],
+      ["Sai cosa mi è successo ieri?", "Vet du vad som hände mig i går?"],
+      ["Insomma, è stata una giornata incredibile", "Kort sagt, det var en otrolig dag"],
+      ["Appena sono arrivata, ho chiamato mia figlia|Appena sono arrivato, ho chiamato mia figlia", "Så fort jag kom fram ringde jag min dotter"]
+  ]}
+]},
+{ id: "n6", name: "Nästan flytande", cefr: "B2", lessons: [
+  { id: "konj_imperfekt", em: "💫", name: "Konjunktiv imperfekt",
+    tip: "<b>Congiuntivo imperfetto</b> används när huvudsatsen står i dåtid eller konditionalis: <i>Pensavo che <b>fosse</b> vero</i>, <i>Vorrei che tu <b>venissi</b></i>. Ändelser: parl<b>assi</b>, parl<b>assi</b>, parl<b>asse</b>, parl<b>assimo</b>, parl<b>aste</b>, parl<b>assero</b> (prend<b>essi</b>, dorm<b>issi</b>). Essere: <b>fossi, fossi, fosse, fossimo, foste, fossero</b>. Fare → <b>facessi</b>, stare → <b>stessi</b>, dare → <b>dessi</b>.",
+    items: [
+      ["Pensavo che fosse vero", "Jag trodde att det var sant"],
+      ["Vorrei che tu venissi con me", "Jag skulle vilja att du följde med mig"],
+      ["Non sapevo che tu parlassi italiano", "Jag visste inte att du pratade italienska"],
+      ["Speravo che facesse bel tempo", "Jag hoppades att det skulle bli fint väder"],
+      ["Era necessario che partissimo subito", "Det var nödvändigt att vi åkte genast"],
+      ["Magari fosse così facile!", "Om det ändå vore så lätt!"],
+      ["Mi piacerebbe che i miei nipoti imparassero l'italiano", "Jag skulle vilja att mina barnbarn lärde sig italienska"],
+      ["Sembrava che stesse per piovere", "Det såg ut som om det skulle börja regna"],
+      ["Parla come se fosse il capo", "Han pratar som om han vore chefen"],
+      ["Benché fossi stanca, sono uscita|Benché fossi stanco, sono uscito", "Fast jag var trött gick jag ut"],
+      ["Volevo che tu lo sapessi", "Jag ville att du skulle veta det"],
+      ["Non credevo che avessero ragione", "Jag trodde inte att de hade rätt"]
+  ]},
+  { id: "villkor", em: "🔀", name: "Om-satser",
+    tip: "<b>Verklig:</b> <i>Se piove, resto a casa</i> (presens + presens/futurum).<br><b>Möjlig:</b> <i>Se avessi tempo, viaggerei</i> (konj. imperfekt + konditionalis).<br><b>Overklig, dåtid:</b> <i>Se l'avessi saputo, sarei venuta</i> (konj. pluskvamperfekt + konditionalis perfekt).<br>Obs! Aldrig konditionalis direkt efter <b>se</b>.",
+    items: [
+      ["Se piove, resto a casa", "Om det regnar stannar jag hemma"],
+      ["Se hai tempo, chiamami", "Om du har tid, ring mig"],
+      ["Se avessi più tempo, studierei di più", "Om jag hade mer tid skulle jag studera mer"],
+      ["Se fossi in te, accetterei", "Om jag vore du skulle jag tacka ja"],
+      ["Se vincessi alla lotteria, comprerei una casa in Toscana", "Om jag vann på lotteriet skulle jag köpa ett hus i Toscana"],
+      ["Se potessi, verrei volentieri", "Om jag kunde skulle jag gärna komma"],
+      ["Se l'avessi saputo, sarei venuta prima|Se l'avessi saputo, sarei venuto prima", "Om jag hade vetat det hade jag kommit tidigare"],
+      ["Se avessimo preso il treno, saremmo arrivati in tempo", "Om vi hade tagit tåget hade vi kommit i tid"],
+      ["Cosa faresti se fossi ricca?|Cosa faresti se fossi ricco?", "Vad skulle du göra om du vore rik?"],
+      ["Se non avessi studiato, non avrei capito", "Om jag inte hade studerat hade jag inte förstått"],
+      ["Ti avrei aiutato se me l'avessi chiesto|Ti avrei aiutata se me l'avessi chiesto", "Jag hade hjälpt dig om du hade bett mig"],
+      ["Se fa bel tempo, andremo al mare", "Om det är fint väder åker vi till havet"]
+  ]},
+  { id: "pluskvamperfekt", em: "⏪", name: "Hade gjort / ska ha gjort",
+    tip: "<b>Trapassato prossimo</b> = hade gjort: imperfekt av avere/essere + particip: <i>avevo già mangiato</i>, <i>ero già partita</i>. <b>Futuro anteriore</b> = kommer att ha gjort: <i>Quando avrò finito, ti chiamerò</i>. Används också för gissningar om det förflutna: <i>Avrà perso il treno</i> (han har nog missat tåget).",
+    items: [
+      ["Quando sono arrivata, il film era già cominciato|Quando sono arrivato, il film era già cominciato", "När jag kom hade filmen redan börjat"],
+      ["Avevo già mangiato", "Jag hade redan ätit"],
+      ["Non ero mai stata a Venezia prima|Non ero mai stato a Venezia prima", "Jag hade aldrig varit i Venedig förut"],
+      ["Mi ha detto che aveva perso il lavoro", "Han berättade att han hade förlorat jobbet"],
+      ["Erano già partiti quando ho chiamato", "De hade redan åkt när jag ringde"],
+      ["Quando avrò finito, ti chiamerò", "När jag är klar ska jag ringa dig"],
+      ["Dopo che avremo mangiato, faremo una passeggiata", "När vi har ätit ska vi ta en promenad"],
+      ["Avrà perso il treno", "Han har nog missat tåget"],
+      ["Sarà già arrivata a casa", "Hon har nog redan kommit hem"],
+      ["Entro giugno avrò imparato l'italiano", "Till juni kommer jag att ha lärt mig italienska"],
+      ["Non avevo capito niente", "Jag hade inte förstått någonting"],
+      ["Pensavo che te l'avessero detto", "Jag trodde att de hade sagt det till dig"]
+  ]},
+  { id: "passato_remoto", em: "📜", name: "Passato remoto – böckernas dåtid",
+    tip: "<b>Passato remoto</b> används i böcker, historia och sagor (och i vardagstal i södra Italien). Regelbundna: parl<b>ai</b>, parl<b>asti</b>, parl<b>ò</b>, parl<b>ammo</b>, parl<b>aste</b>, parl<b>arono</b>. Oregelbundna: essere → <b>fui, fu, furono</b>; avere → <b>ebbi, ebbe</b>; fare → <b>fece</b>; dire → <b>disse</b>; venire → <b>venne</b>; nascere → <b>nacque</b>; vedere → <b>vide</b>; vivere → <b>visse</b>.",
+    items: [
+      ["Dante nacque a Firenze nel 1265", "Dante föddes i Florens år 1265"],
+      ["La guerra finì nel 1945", "Kriget tog slut 1945"],
+      ["C'era una volta una principessa che viveva in un castello", "Det var en gång en prinsessa som bodde i ett slott"],
+      ["Il re ebbe tre figli", "Kungen fick tre barn"],
+      ["Quando la vide, se ne innamorò", "När han såg henne förälskade han sig i henne"],
+      ["Michelangelo dipinse la Cappella Sistina", "Michelangelo målade Sixtinska kapellet"],
+      ["I miei nonni emigrarono in America", "Mina farföräldrar emigrerade till Amerika"],
+      ["Fu un momento indimenticabile", "Det var ett oförglömligt ögonblick"],
+      ["Disse che sarebbe tornato", "Han sa att han skulle komma tillbaka"],
+      ["Vennero tutti alla festa", "Alla kom till festen"],
+      ["Colombo arrivò in America nel 1492", "Columbus kom till Amerika år 1492"],
+      ["E vissero felici e contenti", "Och de levde lyckliga i alla sina dagar"]
+  ]},
+  { id: "idiom", em: "🍀", name: "Idiom och uttryck",
+    tip: "Idiom får dig att låta som en riktig italienare! <i>In bocca al lupo!</i> (lycka till – svara <i>Crepi!</i>), <i>Magari!</i> (om det ändå vore så!), <i>Boh</i> (ingen aning), <i>Costa un occhio della testa</i> (det kostar skjortan), <i>Acqua in bocca!</i> (säg inget!).",
+    items: [
+      ["In bocca al lupo! — Crepi!", "Lycka till! – Tack!"],
+      ["Costa un occhio della testa", "Det kostar skjortan"],
+      ["Magari!", "Om det ändå vore så!"],
+      ["Boh, non lo so", "Ingen aning, jag vet inte"],
+      ["Acqua in bocca!", "Säg inget till någon!"],
+      ["Non è la fine del mondo", "Det är inte hela världen"],
+      ["Piove a catinelle", "Det ösregnar"],
+      ["Mi hai fatto venire l'acquolina in bocca", "Du fick det att vattnas i munnen på mig"],
+      ["Essere al settimo cielo", "Att vara i sjunde himlen"],
+      ["Prendere due piccioni con una fava", "Att slå två flugor i en smäll"],
+      ["Meglio tardi che mai", "Bättre sent än aldrig"],
+      ["Chi va piano va sano e va lontano", "Skynda långsamt"],
+      ["Dai, su, non fare così!", "Kom igen, var inte sådan!"]
+  ]},
+  { id: "diskutera", em: "🗣️", name: "Diskutera och argumentera",
+    tip: "Att argumentera: <i>da un lato … dall'altro</i> (å ena sidan … å andra sidan), <i>comunque</i> (hur som helst), <i>nonostante</i> (trots), <i>tuttavia</i> (dock), <i>inoltre</i> (dessutom), <i>a mio parere</i> (enligt min mening), <i>non è detto che</i> (det är inte säkert att). Efter <i>nonostante</i> + verb och <i>non è detto che</i> följer konjunktiv.",
+    items: [
+      ["Da un lato hai ragione, dall'altro non sono convinta|Da un lato hai ragione, dall'altro non sono convinto", "Å ena sidan har du rätt, å andra sidan är jag inte övertygad"],
+      ["A mio parere, è una buona idea", "Enligt min mening är det en bra idé"],
+      ["Comunque, ne riparliamo domani", "Hur som helst, vi pratar om det igen i morgon"],
+      ["Nonostante il freddo, siamo usciti", "Trots kylan gick vi ut"],
+      ["Nonostante piovesse, abbiamo giocato", "Trots att det regnade spelade vi"],
+      ["Inoltre, costa troppo", "Dessutom kostar det för mycket"],
+      ["Non è detto che sia vero", "Det är inte säkert att det är sant"],
+      ["Capisco il tuo punto di vista", "Jag förstår din synvinkel"],
+      ["Su questo non sono d'accordo", "På den punkten håller jag inte med"],
+      ["Bisogna tenere conto dei costi", "Man måste ta hänsyn till kostnaderna"],
+      ["In fin dei conti, è una questione di soldi", "När allt kommer omkring är det en fråga om pengar"],
+      ["Tuttavia, ci sono anche dei vantaggi", "Det finns dock också fördelar"],
+      ["Hai sollevato un punto interessante", "Du tog upp en intressant poäng"]
+  ]},
+  { id: "formell", em: "🎩", name: "Formell italienska",
+    tip: "Med främlingar och i formella sammanhang används <b>Lei</b> (ni) med verbet i tredje person: <i>Come sta?</i>, <i>Lei è di qui?</i> I e-post: <i>Gentile signora Rossi</i> (Bästa fru Rossi), <i>La ringrazio per …</i>, <i>Cordiali saluti</i> (Vänliga hälsningar).",
+    items: [
+      ["Gentile signora Rossi", "Bästa fru Rossi"],
+      ["Le scrivo per chiedere un'informazione", "Jag skriver till er för att be om en upplysning"],
+      ["La ringrazio per la Sua disponibilità", "Jag tackar er för er hjälpsamhet"],
+      ["Resto in attesa di una Sua risposta", "Jag ser fram emot ert svar"],
+      ["Cordiali saluti", "Vänliga hälsningar"],
+      ["Mi scusi per il disturbo", "Ursäkta att jag stör"],
+      ["Potrebbe ripetere più lentamente?", "Skulle ni kunna upprepa långsammare?"],
+      ["Lei è molto gentile", "Ni är mycket vänlig"],
+      ["Possiamo darci del tu?", "Ska vi säga du till varandra?"],
+      ["In allegato trova il documento", "Bifogat finner ni dokumentet"],
+      ["Vorrei prenotare un appuntamento", "Jag skulle vilja boka en tid"],
+      ["Sarebbe possibile spostare la visita?", "Vore det möjligt att flytta besöket?"],
+      ["Mi permetta di presentarmi", "Tillåt mig att presentera mig"]
+  ]},
+  { id: "samtal", em: "☕", name: "Det italienska samtalet",
+    tip: "Småord gör talet naturligt: <i>allora</i> (nå / då så), <i>cioè</i> (jag menar), <i>dai!</i> (kom igen!), <i>insomma</i> (sådär / kort sagt), <i>mica</i> (inte alls), <i>ecco</i> (där ser du), <i>beh</i> (tja), <i>figurati!</i> (ingen orsak!), <i>meno male</i> (tur att).",
+    items: [
+      ["Allora, cosa facciamo stasera?", "Nå, vad gör vi i kväll?"],
+      ["Cioè, non ho capito bene", "Jag menar, jag förstod inte riktigt"],
+      ["Grazie mille! — Figurati!", "Tack så mycket! – Ingen orsak!"],
+      ["Non è mica facile", "Det är inte alls lätt"],
+      ["Meno male che sei arrivata|Meno male che sei arrivato", "Tur att du kom"],
+      ["Ecco, questo è il problema", "Där ser du, det är det som är problemet"],
+      ["Com'è andata? — Insomma…", "Hur gick det? – Sådär…"],
+      ["Beh, dipende", "Tja, det beror på"],
+      ["Dai, andiamo!", "Kom igen, nu går vi!"],
+      ["Ma dai! Davvero?", "Nej men! Verkligen?"],
+      ["Ci mancherebbe altro!", "Det är väl självklart!"],
+      ["Scherzi?", "Skämtar du?"],
+      ["Va bene, d'accordo", "Okej, då säger vi så"],
+      ["Che ne dici di un caffè?", "Vad säger du om en kaffe?"]
+  ]}
+]}
+];
+
+/* ---------- Index ---------- */
+var LESSON = {}, LEVEL = {}, ALL_ITEMS = [];
+LEVELS.forEach(function (lv, li) {
+  lv.n = li + 1;
+  LEVEL[lv.id] = lv;
+  lv.items = [];
+  lv.lessons.forEach(function (l, i) {
+    l.n = i + 1;
+    l.level = lv;
+    l.items = l.items.map(function (a) { return { it: a[0].split("|"), sv: a[1] }; });
+    LESSON[l.id] = l;
+    lv.items = lv.items.concat(l.items);
+  });
+  ALL_ITEMS = ALL_ITEMS.concat(lv.items);
+});
+
+/* ---------- Lagring ---------- */
+var store = loadStore();
+function loadStore() {
+  var s = null;
+  try { s = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+  return fixStore(s);
+}
+function fixStore(s) {
+  s = s && typeof s === "object" ? s : {};
+  s.w = s.w || {}; s.o = s.o || {}; s.t = s.t || {}; s.set = s.set || {};
+  return s;
+}
+function saveStore() {
+  try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {}
+}
+try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
+
+/* ---------- Hjälpfunktioner ---------- */
+var app = document.getElementById("app");
+var session = null;
+var view = null;
+
+function shuffle(a) {
+  a = a.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+function esc(s) {
+  return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; });
+}
+function pretty(s) { return esc(s).replace(/'/g, "’"); }
+function stars(p) {
+  var n = p >= 100 ? 3 : p >= 80 ? 2 : p > 0 ? 1 : 0, s = "";
+  for (var i = 0; i < 3; i++) s += i < n ? "★" : "☆";
+  return s;
+}
+function pctText(v) { return v == null ? "–" : v + " %"; }
+
+/* Tal till italienska ord, så att ”3” och ”tre” räknas lika. */
+var U = ["zero","uno","due","tre","quattro","cinque","sei","sette","otto","nove","dieci","undici","dodici","tredici","quattordici","quindici","sedici","diciassette","diciotto","diciannove"];
+var T = ["","","venti","trenta","quaranta","cinquanta","sessanta","settanta","ottanta","novanta"];
+function num(n) {
+  if (n < 20) return U[n];
+  if (n < 100) {
+    var t = T[Math.floor(n / 10)], u = n % 10;
+    if (u === 1 || u === 8) t = t.slice(0, -1);
+    return t + (u ? U[u] : "");
+  }
+  if (n < 1000) {
+    var c = Math.floor(n / 100), r = n % 100;
+    var h = c === 1 ? "cento" : U[c] + "cento";
+    if (r >= 80 && r < 90) h = h.slice(0, -1);
+    return h + (r ? num(r) : "");
+  }
+  if (n < 1000000) {
+    var k = Math.floor(n / 1000), r2 = n % 1000;
+    return (k === 1 ? "mille" : num(k) + "mila") + (r2 ? num(r2) : "");
+  }
+  return String(n);
+}
+
+function norm(s) {
+  s = String(s).toLowerCase().replace(/[’‘`´]/g, "'");
+  s = s.replace(/\b(\d{1,2})[:.](\d{2})\b/g, function (_, h, m) {
+    m = parseInt(m, 10);
+    return h + (m === 30 ? " e mezza" : m === 15 ? " e un quarto" : m === 0 ? "" : " e " + m);
+  });
+  s = s.replace(/\d+/g, function (d) { return " " + num(parseInt(d, 10)) + " "; });
+  s = s.replace(/[.,!?;:¡¿"“”«»()\[\]…—–\-]/g, " ").replace(/'/g, " ");
+  s = s.replace(/\s+/g, " ").trim();
+  s = s.replace(/^(io|tu|lui|lei|noi|voi|loro) /, "");
+  s = s.replace(/\bche cosa\b/g, "cosa");
+  return s;
+}
+function flat(s) { return s.normalize("NFD").replace(/[̀-ͯ]/g, ""); }
+function lev(a, b) {
+  var m = a.length, n = b.length, prev = [], cur, i, j;
+  if (!m) return n; if (!n) return m;
+  for (j = 0; j <= n; j++) prev[j] = j;
+  for (i = 1; i <= m; i++) {
+    cur = [i];
+    for (j = 1; j <= n; j++) {
+      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    }
+    prev = cur;
+  }
+  return prev[n];
+}
+
+/* Rättning av skrivet svar. */
+function checkTyped(ans, alts) {
+  var a = norm(ans), fa = flat(a), i;
+  if (!a) return { ok: false };
+  for (i = 0; i < alts.length; i++) if (a === norm(alts[i])) return { ok: true, kind: "exact", alt: alts[i] };
+  for (i = 0; i < alts.length; i++) if (fa === flat(norm(alts[i]))) return { ok: true, kind: "accent", alt: alts[i] };
+  for (i = 0; i < alts.length; i++) {
+    var ft = flat(norm(alts[i]));
+    var allow = ft.length >= 25 ? 2 : ft.length >= 8 ? 1 : 0;
+    if (lev(fa, ft) <= allow) return { ok: true, kind: "typo", alt: alts[i] };
+  }
+  return { ok: false };
+}
+
+/* Rättning av talat svar: likhet mellan 0 och 1. */
+function speechScore(heard, alts) {
+  var best = 0;
+  heard.forEach(function (h) {
+    var a = flat(norm(h)), wa = a.split(" ");
+    alts.forEach(function (t) {
+      var b = flat(norm(t)), wb = b.split(" ");
+      var cs = 1 - lev(a, b) / Math.max(a.length, b.length, 1);
+      var ws = 1 - lev(wa, wb) / Math.max(wa.length, wb.length, 1);
+      best = Math.max(best, cs, ws);
+    });
+  });
+  return best;
+}
+
+/* ---------- Tal (uppläsning) ---------- */
+var itVoice = null;
+function findVoice() {
+  try {
+    var vs = window.speechSynthesis.getVoices(), first = null;
+    for (var i = 0; i < vs.length; i++) {
+      var lang = (vs[i].lang || "").replace("_", "-").toLowerCase();
+      if (lang.indexOf("it") === 0) {
+        if (!first) first = vs[i];
+        if (lang === "it-it" && /enhanced|premium|alice|federica|luca|paola/i.test(vs[i].name)) { itVoice = vs[i]; return; }
+      }
+    }
+    itVoice = first;
+  } catch (e) {}
+}
+try { findVoice(); window.speechSynthesis.onvoiceschanged = findVoice; } catch (e) {}
+
+function speak(text, slow) {
+  try {
+    var s = window.speechSynthesis;
+    if (!s) return;
+    s.cancel();
+    var u = new SpeechSynthesisUtterance(String(text).replace(/[…—]/g, ", "));
+    u.lang = "it-IT";
+    u.rate = slow ? 0.55 : (store.set.slow ? 0.7 : 0.9);
+    if (itVoice) u.voice = itVoice;
+    s.speak(u);
+  } catch (e) {}
+}
+
+/* ---------- Taligenkänning (mikrofon) ---------- */
+var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+var rec = null, micBlocked = false;
+function stopListening() {
+  if (rec) { try { rec.abort(); } catch (e) {} rec = null; }
+}
+function listen(onLive, onDone) {
+  stopListening();
+  try { window.speechSynthesis.cancel(); } catch (e) {}
+  var r, heard = [], err = null, finished = false, timer;
+  try {
+    r = new SR();
+    r.lang = "it-IT"; r.interimResults = true; r.maxAlternatives = 5; r.continuous = false;
+  } catch (e) { onDone([], "start"); return; }
+  rec = r;
+  r.onresult = function (e) {
+    var prefix = "";
+    for (var i = 0; i < e.results.length - 1; i++) prefix += e.results[i][0].transcript + " ";
+    var last = e.results[e.results.length - 1];
+    heard = [];
+    for (var j = 0; j < last.length; j++) heard.push(prefix + last[j].transcript);
+    if (onLive && heard[0]) onLive(heard[0]);
+  };
+  r.onerror = function (e) { err = e.error || "fel"; };
+  r.onend = function () {
+    clearTimeout(timer);
+    if (finished || rec !== r) return;
+    finished = true; rec = null;
+    onDone(heard, err);
+  };
+  timer = setTimeout(function () { try { r.stop(); } catch (e) {} }, 12000);
+  try { r.start(); } catch (e) { finished = true; rec = null; clearTimeout(timer); onDone([], "start"); }
+}
+function useSelfGrade() { return !SR || micBlocked || store.set.self; }
+
+/* ---------- Framsteg ---------- */
+function lessonScore(l) { return ((store.w[l.id] || 0) + (store.o[l.id] || 0)) / 2; }
+function levelPct(lv) {
+  var sum = 0, n = 0;
+  lv.lessons.forEach(function (l) { sum += (store.w[l.id] || 0) + (store.o[l.id] || 0); n += 2; });
+  sum += store.t[lv.id] || 0; n += 1;
+  return Math.floor(sum / n);
+}
+function totalPct() {
+  var sum = 0, n = 0;
+  LEVELS.forEach(function (lv) {
+    lv.lessons.forEach(function (l) { sum += (store.w[l.id] || 0) + (store.o[l.id] || 0); n += 2; });
+    sum += store.t[lv.id] || 0; n += 1;
+  });
+  sum += store.t.final || 0; n += 1;
+  return Math.floor(sum / n);
+}
+/* Nästa steg: första ogjorda delen, annars första som inte är 100 %. */
+function nextUp() {
+  var i, j, lv, l;
+  for (i = 0; i < LEVELS.length; i++) {
+    lv = LEVELS[i];
+    for (j = 0; j < lv.lessons.length; j++) {
+      l = lv.lessons[j];
+      if (store.w[l.id] == null || store.o[l.id] == null) return { lesson: l };
+    }
+    if (store.t[lv.id] == null) return { level: lv };
+  }
+  if (store.t.final == null) return { final: true };
+  for (i = 0; i < LEVELS.length; i++) {
+    lv = LEVELS[i];
+    for (j = 0; j < lv.lessons.length; j++) {
+      l = lv.lessons[j];
+      if (store.w[l.id] < 100 || store.o[l.id] < 100) return { lesson: l };
+    }
+    if (store.t[lv.id] < 100) return { level: lv };
+  }
+  if (store.t.final < 100) return { final: true };
+  return null;
+}
+
+/* ---------- Skärmar ---------- */
+function show(h) {
+  stopListening();
+  app.innerHTML = h;
+  window.scrollTo(0, 0);
+}
+function bar(p) { return '<div class="mini"><div style="width:' + p + '%"></div></div>'; }
+
+function renderHome() {
+  session = null; view = { name: "home" };
+  var tp = totalPct(), nx = nextUp();
+  var h = '<div class="stripe"><i></i><i></i><i></i></div>' +
+    '<h1 class="title">Impara l’italiano</h1>' +
+    '<p class="sub">Från första ”ciao” till nästan flytande italienska.</p>' +
+    '<div class="card"><b>Din väg till flytande: ' + tp + ' %</b>' + bar(tp) +
+    '<p class="small" style="margin:10px 0 0">6 nivåer · 48 lektioner · ' + ALL_ITEMS.length + ' fraser. Varje lektion har en skriftlig och en muntlig del.</p></div>';
+  if (nx) {
+    var label = nx.lesson ? nx.lesson.em + " " + esc(nx.lesson.name) : nx.level ? "📝 Nivåprov " + nx.level.n : "🏆 Stora slutprovet";
+    var act = nx.lesson ? 'data-act="lesson" data-id="' + nx.lesson.id + '"' : nx.level ? 'data-act="level" data-id="' + nx.level.id + '"' : 'data-act="test" data-id="final"';
+    h += '<button class="go" ' + act + '>▶ Fortsätt: ' + label + '</button>';
+  } else {
+    h += '<div class="card" style="text-align:center"><b>🎉 Complimenti! Du har 100 % på allt!</b></div>';
+  }
+  h += '<h2 class="h2">Nivåer</h2>';
+  LEVELS.forEach(function (lv) {
+    var p = levelPct(lv);
+    h += '<button class="lesson' + (p === 100 ? " done" : "") + '" data-act="level" data-id="' + lv.id + '">' +
+      '<span class="em" aria-hidden="true">' + ["🌱","🏡","💬","🕰️","🧭","🎓"][lv.n - 1] + '</span>' +
+      '<span class="tx"><span class="nm">Nivå ' + lv.n + ': ' + esc(lv.name) + '</span>' +
+      '<span class="ct">' + lv.cefr + ' · ' + lv.lessons.length + ' lektioner + nivåprov</span>' + bar(p) + '</span>' +
+      '<span class="st">' + p + ' %</span></button>';
+  });
+  var f = store.t.final;
+  h += '<button class="lesson test" data-act="test" data-id="final"><span class="em" aria-hidden="true">🏆</span>' +
+    '<span class="tx"><span class="nm">Stora slutprovet</span><span class="ct">30 frågor från alla nivåer, skriftligt och muntligt</span></span>' +
+    '<span class="st">' + pctText(f) + '</span></button>';
+  h += '<button class="btn2" data-act="settings">⚙️ Inställningar och hjälp</button>' +
+    '<p class="small" style="margin-top:22px">Kursen går från nybörjare (A1) till nästan flytande (B2). När du har 100 % på alla lektioner och prov har du gått igenom all viktig grammatik och de vanligaste uttrycken – både skriftligt och muntligt. Prata gärna italienska med riktiga människor också, det är den bästa träningen!</p>';
+  show(h);
+}
+
+function renderLevel(id) {
+  var lv = LEVEL[id];
+  session = null; view = { name: "level", id: id };
+  var h = '<div class="top"><button class="back" data-act="home">‹ Alla nivåer</button></div>' +
+    '<h1 class="title">Nivå ' + lv.n + ': ' + esc(lv.name) + '</h1>' +
+    '<p class="sub">' + lv.cefr + ' · ' + levelPct(lv) + ' % klart</p>';
+  lv.lessons.forEach(function (l) {
+    var w = store.w[l.id], o = store.o[l.id], full = w === 100 && o === 100;
+    h += '<button class="lesson' + (full ? " done" : "") + '" data-act="lesson" data-id="' + l.id + '">' +
+      '<span class="em" aria-hidden="true">' + l.em + '</span>' +
+      '<span class="tx"><span class="nm">' + esc(l.name) + '</span>' +
+      '<span class="ct">✍️ ' + pctText(w) + ' · 🗣️ ' + pctText(o) + '</span></span>' +
+      '<span class="st">' + (full ? "✓" : "") + '</span></button>';
+  });
+  var t = store.t[lv.id];
+  h += '<button class="lesson test' + (t === 100 ? " done" : "") + '" data-act="test" data-id="' + lv.id + '">' +
+    '<span class="em" aria-hidden="true">📝</span><span class="tx"><span class="nm">Nivåprov ' + lv.n + '</span>' +
+    '<span class="ct">20 frågor: skriv, lyssna och tala</span></span><span class="st">' + pctText(t) + '</span></button>';
+  show(h);
+}
+
+function renderLesson(id) {
+  var l = LESSON[id];
+  session = null; view = { name: "lesson", id: id };
+  var h = '<div class="top"><button class="back" data-act="level" data-id="' + l.level.id + '">‹ Nivå ' + l.level.n + '</button></div>' +
+    '<h1 class="title">' + l.em + ' ' + esc(l.name) + '</h1>' +
+    '<p class="sub">Nivå ' + l.level.n + ' · Lektion ' + l.n + ' av ' + l.level.lessons.length + '</p>' +
+    '<button class="go" data-act="practice" data-kind="w" data-id="' + id + '">✍️ Skriftlig övning · ' + pctText(store.w[id]) + '</button>' +
+    '<button class="go" style="margin-top:12px" data-act="practice" data-kind="o" data-id="' + id + '">🗣️ Muntlig övning · ' + pctText(store.o[id]) + '</button>' +
+    '<p class="small" style="margin:10px 0 22px">Läs igenom tipsen och lyssna på fraserna först. Sikta på 100 % i båda övningarna.</p>' +
+    '<div class="tip"><h3>💡 Grammatik och tips</h3>' + l.tip + '</div>' +
+    '<h2 class="h2">Fraser i lektionen</h2>';
+  l.items.forEach(function (it, i) {
+    h += '<button class="phr" data-act="say" data-i="' + i + '"><span class="listen" aria-hidden="true">🔊</span>' +
+      '<span><span class="it">' + pretty(it.it[0]) + '</span><span class="sv">' + esc(it.sv) + '</span></span></button>';
+  });
+  show(h);
+}
+
+/* ---------- Övningar ---------- */
+function tileWords(s) {
+  return s.split(/\s+/).map(function (w) {
+    return w.replace(/^[¡¿"“«(—–\-]+|[.,!?;:"”»)…—–]+$/g, "");
+  }).filter(function (w) { return w && /[A-Za-zÀ-ÿ0-9]/.test(w); });
+}
+function mk(type, item, pool) { return { type: type, item: item, pool: pool, first: true }; }
+
+function buildPractice(l, kind) {
+  var lv = l.level.n, a = [], b = [];
+  shuffle(l.items).forEach(function (item) {
+    if (kind === "w") {
+      a.push(mk(Math.random() < 0.5 ? "mc_it" : "mc_sv", item, l.items));
+      var canTile = tileWords(item.it[0]).length >= 3;
+      var pType = Math.min(0.85, 0.2 + lv * 0.12);
+      b.push(mk(canTile && Math.random() > pType ? "tiles" : "type", item, l.items));
+    } else {
+      a.push(mk(lv >= 2 && Math.random() < 0.25 + lv * 0.08 ? "dict" : "listen", item, l.items));
+      var pTr = Math.min(0.85, 0.15 + lv * 0.12);
+      b.push(mk(Math.random() < pTr ? "say_tr" : "say_rep", item, l.items));
+    }
+  });
+  return shuffle(a).concat(shuffle(b));
+}
+function buildTest(items, nType, nDict, nSay) {
+  var pick = shuffle(items), q = [], i = 0;
+  for (var k = 0; k < nType; k++) q.push(mk("type", pick[i++], items));
+  for (k = 0; k < nDict; k++) q.push(mk("dict", pick[i++], items));
+  for (k = 0; k < nSay; k++) q.push(mk("say_tr", pick[i++], items));
+  return q;
+}
+
+function startPractice(kind, id) {
+  var l = LESSON[id];
+  var queue = buildPractice(l, kind);
+  session = { kind: kind, id: id, test: false, title: l.name, queue: queue, total: queue.length, answered: 0, right: 0, wrong: [] };
+  renderQ();
+}
+function startTest(id) {
+  var queue, title;
+  if (id === "final") { queue = buildTest(ALL_ITEMS, 14, 8, 8); title = "Stora slutprovet"; }
+  else { queue = buildTest(LEVEL[id].items, 10, 5, 5); title = "Nivåprov " + LEVEL[id].n; }
+  session = { kind: "t", id: id, test: true, title: title, queue: queue, total: queue.length, answered: 0, right: 0, wrong: [] };
+  renderQ();
+}
+function leaveSession() {
+  var s = session;
+  if (!s) return renderHome();
+  if (s.answered > 0 && s.queue.length && !confirm("Vill du avbryta? Resultatet sparas inte.")) return;
+  if (s.kind === "t") return s.id === "final" ? renderHome() : renderLevel(s.id);
+  renderLesson(s.id);
+}
+
+function topBar() {
+  var s = session, p = Math.round(s.answered / s.total * 100);
+  return '<div class="top"><button class="back" data-act="leave">✕</button>' +
+    '<div class="bar" role="progressbar" aria-valuenow="' + p + '" aria-valuemin="0" aria-valuemax="100"><div style="width:' + p + '%"></div></div>' +
+    '<span class="small">' + (s.test ? "Prov" : s.kind === "w" ? "✍️" : "🗣️") + '</span></div>';
+}
+function opts(q, field) {
+  var me = field === "sv" ? q.item.sv : q.item.it[0], seen = {}, out = [];
+  seen[me] = 1;
+  shuffle(q.pool).forEach(function (x) {
+    var t = field === "sv" ? x.sv : x.it[0];
+    if (out.length < 3 && !seen[t]) { seen[t] = 1; out.push(x); }
+  });
+  out.push(q.item);
+  return shuffle(out);
+}
+var ACCENTS = ["à", "è", "é", "ì", "ò", "ù"];
+function inputHtml() {
+  var h = '<input id="ans" class="ans" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" lang="it" enterkeyhint="done" placeholder="Skriv på italienska">' +
+    '<div class="accents">';
+  ACCENTS.forEach(function (c) { h += '<button data-acc="' + c + '" tabindex="-1">' + c + '</button>'; });
+  return h + '</div><button class="go" data-act="check">Kontrollera</button>' +
+    '<button class="btn2 sm" data-act="dunno">Jag vet inte</button>';
+}
+function micHtml() {
+  if (useSelfGrade()) {
+    return '<div id="micarea"><p class="mst">Säg det högt på italienska. Tryck sedan på knappen.</p>' +
+      '<button class="go" data-act="reveal">Visa rätt svar</button></div>';
+  }
+  return '<div id="micarea"><div class="micwrap"><button class="mic" data-act="mic" aria-label="Tryck och prata">🎤</button>' +
+    '<p class="mst" id="mst">Tryck på mikrofonen och prata</p></div>' +
+    '<button class="btn2 sm" data-act="giveup">Visa svaret</button></div>';
+}
+
+function renderQ() {
+  var s = session, q = s.queue[0], it = q.item.it[0], h = topBar();
+  s.locked = false; s.tries = 0;
+  if (q.type === "mc_it" || q.type === "mc_sv" || q.type === "listen") {
+    var field = q.type === "mc_sv" ? "it" : "sv";
+    s.opts = opts(q, field);
+    if (q.type === "mc_it") {
+      h += '<p class="ask">Vad betyder det här?</p><div class="word"><button class="listen" data-act="hear" aria-label="Lyssna">🔊</button><span class="big">' + pretty(it) + '</span></div>';
+    } else if (q.type === "mc_sv") {
+      h += '<p class="ask">Hur säger man det här på italienska?</p><div class="word"><span class="big">' + esc(q.item.sv) + '</span></div>';
+    } else {
+      h += '<p class="ask">🎧 Lyssna. Vad betyder det?</p>' + listenBtns();
+    }
+    s.opts.forEach(function (o, i) {
+      h += '<button class="opt" data-act="answer" data-i="' + i + '">' + (field === "sv" ? esc(o.sv) : pretty(o.it[0])) + '</button>';
+    });
+  } else if (q.type === "tiles") {
+    var words = tileWords(it), target = {}, extra = [];
+    words.forEach(function (w) { target[w.toLowerCase()] = 1; });
+    shuffle(q.pool).forEach(function (x) {
+      if (x === q.item || extra.length >= 2) return;
+      var cand = shuffle(tileWords(x.it[0])).filter(function (w) { return !target[w.toLowerCase()]; })[0];
+      if (cand) { target[cand.toLowerCase()] = 1; extra.push(cand); }
+    });
+    s.bank = shuffle(words.concat(extra)).map(function (w) { return { w: w, used: false }; });
+    s.picked = [];
+    h += '<p class="ask">Bygg meningen på italienska</p><div class="word"><span class="big">' + esc(q.item.sv) + '</span></div>' +
+      '<div id="tiles"></div><button class="go" data-act="checktiles">Kontrollera</button>';
+  } else if (q.type === "type") {
+    h += '<p class="ask">Skriv på italienska</p><div class="word"><span class="big">' + esc(q.item.sv) + '</span></div>' + inputHtml();
+  } else if (q.type === "dict") {
+    h += '<p class="ask">🎧 Lyssna och skriv det du hör</p>' + listenBtns() + inputHtml();
+  } else if (q.type === "say_rep") {
+    h += '<p class="ask">🗣️ Lyssna och säg efter</p><div class="word"><button class="listen" data-act="hear" aria-label="Lyssna">🔊</button><span class="big">' + pretty(it) + '</span></div>' + micHtml();
+  } else if (q.type === "say_tr") {
+    h += '<p class="ask">🗣️ Säg det här på italienska</p><div class="word"><span class="big">' + esc(q.item.sv) + '</span></div>' + micHtml();
+  }
+  h += '<div id="fb"></div>';
+  show(h);
+  if (q.type === "tiles") drawTiles();
+  if (q.type === "mc_it" || q.type === "listen" || q.type === "dict" || q.type === "say_rep") speak(it);
+  if (q.type === "type" || q.type === "dict") {
+    var inp = document.getElementById("ans");
+    if (inp && window.matchMedia && window.matchMedia("(pointer: fine)").matches) inp.focus();
+  }
+}
+function listenBtns() {
+  return '<div class="biglisten"><button class="listen" data-act="hear" aria-label="Lyssna">🔊</button>' +
+    '<button class="listen slow" data-act="hearslow" aria-label="Lyssna långsamt">🐢</button></div>';
+}
+function drawTiles() {
+  var s = session, h = '<div class="slot" aria-label="Ditt svar">';
+  s.picked.forEach(function (bi, pi) { h += '<button class="tile" data-act="untile" data-i="' + pi + '">' + pretty(s.bank[bi].w) + '</button>'; });
+  h += '</div><div class="bank">';
+  s.bank.forEach(function (b, bi) { h += '<button class="tile' + (b.used ? " gone" : "") + '" data-act="tile" data-i="' + bi + '">' + pretty(b.w) + '</button>'; });
+  document.getElementById("tiles").innerHTML = h + '</div>';
+}
+
+function grade(ok, title, body) {
+  var s = session, q = s.queue[0];
+  if (s.locked) return;
+  s.locked = true;
+  stopListening();
+  if (q.first) { s.answered++; if (ok) s.right++; else s.wrong.push(q.item); }
+  if (!ok && !s.test) { var again = mk(q.type, q.item, q.pool); again.first = false; s.queue.push(again); }
+  var btns = app.querySelectorAll("button:not(.listen)");
+  for (var k = 0; k < btns.length; k++) if (!btns[k].classList.contains("back")) btns[k].disabled = true;
+  var inp = document.getElementById("ans");
+  if (inp) { inp.disabled = true; inp.blur(); }
+  if (q.type !== "say_rep" && q.type !== "say_tr") speak(q.item.it[0]);
+  document.getElementById("fb").innerHTML = '<div class="feedback ' + (ok ? "good" : "bad") + '"><div class="in">' +
+    '<h2>' + (title || (ok ? "Rätt! 👏" : "Inte riktigt")) + '</h2>' +
+    '<p>' + body + '</p>' +
+    '<div class="two"><button class="listen" data-act="hear" aria-label="Lyssna" style="flex:none">🔊</button>' +
+    '<button class="go" data-act="next">Fortsätt</button></div></div></div>';
+  var b = app.querySelector(".bar > div");
+  if (b) b.style.width = Math.round(s.answered / s.total * 100) + "%";
+}
+function answerLine(item) { return "<b>" + pretty(item.it[0]) + "</b> = " + esc(item.sv); }
+
+function onAnswer(i) {
+  var s = session, q = s.queue[0];
+  if (s.locked) return;
+  var chosen = s.opts[i], ok = chosen === q.item;
+  var btns = app.querySelectorAll(".opt");
+  btns[s.opts.indexOf(q.item)].classList.add("good");
+  if (!ok) btns[i].classList.add("bad");
+  grade(ok, null, answerLine(q.item));
+}
+function onCheckTyped(giveUp) {
+  var s = session, q = s.queue[0];
+  if (s.locked) return;
+  var inp = document.getElementById("ans"), val = inp ? inp.value : "";
+  if (!giveUp && !val.trim()) { if (inp) inp.focus(); return; }
+  var r = giveUp ? { ok: false } : checkTyped(val, q.item.it);
+  var main = "<b>" + pretty(r.alt || q.item.it[0]) + "</b>";
+  if (r.ok && r.kind === "exact") grade(true, null, main + " = " + esc(q.item.sv));
+  else if (r.ok && r.kind === "accent") grade(true, "Rätt! Tänk på accenterna", main);
+  else if (r.ok) grade(true, "Nästan rätt – litet stavfel", "Rätt stavning: " + main);
+  else grade(false, null, "Rätt svar: " + main + (val.trim() ? "<br>Du skrev: " + pretty(val) : ""));
+}
+function onCheckTiles() {
+  var s = session, q = s.queue[0];
+  if (s.locked || !s.picked.length) return;
+  var val = s.picked.map(function (bi) { return s.bank[bi].w; }).join(" ");
+  var r = checkTyped(val, q.item.it);
+  if (r.ok) grade(true, null, answerLine(q.item));
+  else grade(false, null, "Rätt svar: <b>" + pretty(q.item.it[0]) + "</b>");
+}
+
+function onMic() {
+  var s = session, q = s.queue[0];
+  if (s.locked) return;
+  var btn = app.querySelector(".mic"), st = document.getElementById("mst");
+  if (rec) { try { rec.stop(); } catch (e) {} return; }
+  btn.classList.add("on"); btn.textContent = "■";
+  st.textContent = "Jag lyssnar … prata nu";
+  listen(function (live) {
+    st.textContent = "”" + live + "”";
+  }, function (heard, err) {
+    if (session !== s || s.locked) return;
+    btn.classList.remove("on"); btn.textContent = "🎤";
+    if (err === "not-allowed" || err === "service-not-allowed" || err === "start") {
+      micBlocked = true;
+      document.getElementById("micarea").outerHTML = '<p class="mst">⚠️ Mikrofonen gick inte att använda. ' +
+        'Tillåt mikrofonen för den här sidan (på iPhone/iPad: Inställningar → Allmänt → Tangentbord → Diktering ska vara på). Under tiden rättar du själv.</p>' + micHtml();
+      return;
+    }
+    if (!heard.length) {
+      st.textContent = err === "network" ? "Ingen internetanslutning – försök igen." : "Jag hörde inget. Tryck och försök igen.";
+      return;
+    }
+    var said = esc(heard[0]);
+    if (speechScore(heard, q.item.it) >= 0.8) {
+      grade(true, "Bra uttal! 👏", "Jag hörde: ”" + said + "”<br>" + answerLine(q.item));
+      speak(q.item.it[0]);
+      return;
+    }
+    s.tries++;
+    if (s.tries < 2) {
+      st.innerHTML = "Jag hörde: ”" + said + "”<br><b>Försök igen!</b>";
+      if (q.type === "say_rep") speak(q.item.it[0]);
+    } else {
+      grade(false, null, "Jag hörde: ”" + said + "”<br>Rätt: " + answerLine(q.item));
+      speak(q.item.it[0]);
+    }
+  });
+}
+function onReveal() {
+  var q = session.queue[0];
+  speak(q.item.it[0]);
+  document.getElementById("micarea").innerHTML = '<p class="reveal">' + pretty(q.item.it[0]) + '</p>' +
+    '<p class="mst">Sa du så? Var ärlig – det är så du lär dig!</p>' +
+    '<div class="two"><button class="go" data-act="self" data-ok="1">✓ Jag sa rätt</button>' +
+    '<button class="btn2" style="margin:0" data-act="self" data-ok="0">✗ Inte riktigt</button></div>';
+}
+
+function next() {
+  var s = session;
+  if (!s || !s.locked) return;
+  s.queue.shift();
+  if (!s.queue.length) return renderDone();
+  renderQ();
+}
+
+function renderDone() {
+  var s = session, p = Math.round(s.right / s.total * 100);
+  var map = s.kind === "t" ? store.t : store[s.kind];
+  var prev = map[s.id], best = prev == null || p > prev;
+  if (best) { map[s.id] = p; saveStore(); }
+  var msg = p === 100 ? "Perfetto! Helt rätt!" : p >= 80 ? "Bra jobbat!" : "Bra kämpat! Öva igen så sitter det.";
+  var h = '<div class="done"><div class="stars" aria-label="' + p + ' procent">' + stars(p) + '</div>' +
+    '<p class="pct">' + p + ' %</p><h1>' + msg + '</h1>' +
+    '<p>' + esc(s.title) + (s.test ? "" : s.kind === "w" ? " – skriftligt" : " – muntligt") + '. ' +
+    (best && prev != null ? "Nytt rekord! " : "") + (!best ? "Ditt bästa: " + prev + " %. " : "") + '</p>';
+  if (s.wrong.length) {
+    h += '<div class="card mistakes"><b>Öva extra på:</b><ul>';
+    var seen = [];
+    s.wrong.forEach(function (it) { if (seen.indexOf(it) < 0) { seen.push(it); h += '<li>' + answerLine(it) + '</li>'; } });
+    h += '</ul></div>';
+  }
+  var back = s.kind === "t" ? (s.id === "final" ? 'data-act="home"' : 'data-act="level" data-id="' + s.id + '"') : 'data-act="lesson" data-id="' + s.id + '"';
+  var again = s.kind === "t" ? 'data-act="test" data-id="' + s.id + '"' : 'data-act="practice" data-kind="' + s.kind + '" data-id="' + s.id + '"';
+  h += '<button class="go" ' + back + '>Tillbaka</button><button class="btn2" ' + again + '>Gör om</button>';
+  if (s.kind === "w" && store.o[s.id] == null) h += '<button class="btn2" data-act="practice" data-kind="o" data-id="' + s.id + '">🗣️ Till muntlig övning</button>';
+  h += '</div>';
+  session = null;
+  show(h);
+}
+
+/* ---------- Inställningar ---------- */
+function backupCode() {
+  return btoa(unescape(encodeURIComponent(JSON.stringify(store))));
+}
+function renderSettings() {
+  session = null; view = { name: "settings" };
+  var micOk = !!SR;
+  var h = '<div class="top"><button class="back" data-act="home">‹ Tillbaka</button></div>' +
+    '<h1 class="title">Inställningar</h1>' +
+    '<div class="card"><b>🔊 Uppläsning</b><div class="seg">' +
+    '<button class="' + (!store.set.slow ? "on" : "") + '" data-act="setslow" data-v="0">Normal takt</button>' +
+    '<button class="' + (store.set.slow ? "on" : "") + '" data-act="setslow" data-v="1">Långsammare</button></div>' +
+    '<button class="btn2" data-act="testvoice">Testa rösten</button>' +
+    '<p class="small" id="voicest">' + (itVoice ? "Italiensk röst: " + esc(itVoice.name) : "Hittar ingen italiensk röst ännu. På iPhone/iPad: Inställningar → Hjälpmedel → Uppläst innehåll → Röster → Italienska.") + '</p></div>' +
+    '<div class="card"><b>🎤 Muntliga övningar</b>' +
+    (micOk ? '<div class="seg"><button class="' + (!store.set.self ? "on" : "") + '" data-act="setself" data-v="0">Mikrofonen rättar</button>' +
+      '<button class="' + (store.set.self ? "on" : "") + '" data-act="setself" data-v="1">Jag rättar själv</button></div>' +
+      '<button class="btn2" data-act="testmic">Testa mikrofonen – säg ”Buongiorno”</button><p class="small" id="micst"></p>'
+      : '<p class="small">Den här webbläsaren kan inte lyssna på tal, så du rättar själv i de muntliga övningarna. Safari på iPhone/iPad och Chrome på dator brukar fungera.</p>') +
+    '<p class="small">Om mikrofonen inte fungerar på iPhone/iPad: Inställningar → Allmänt → Tangentbord → slå på <i>Diktering</i>, och tillåt mikrofonen när Safari frågar.</p></div>' +
+    '<div class="card"><b>📱 Lägg appen på hemskärmen</b><p class="small">I Safari: tryck på dela-knappen ⬆️ och välj <i>Lägg till på hemskärmen</i>. Då öppnas kursen som en app och dina resultat sparas säkrare.</p></div>' +
+    '<div class="card"><b>💾 Säkerhetskopia</b><p class="small">Resultaten sparas bara i den här webbläsaren. Kopiera koden och spara den (t.ex. i Anteckningar) så kan du få tillbaka dina framsteg – även på en annan enhet.</p>' +
+    '<textarea id="bk" readonly>' + backupCode() + '</textarea><button class="btn2" data-act="copybk">Kopiera koden</button>' +
+    '<p class="small" style="margin-top:16px">Återställ från kod:</p><textarea id="rs" placeholder="Klistra in koden här"></textarea>' +
+    '<button class="btn2" data-act="restore">Återställ</button></div>' +
+    '<button class="btn2 sm" data-act="reset">Nollställ alla resultat</button>';
+  show(h);
+}
+
+/* ---------- Händelser ---------- */
+app.addEventListener("pointerdown", function (e) {
+  var t = e.target.closest && e.target.closest("[data-acc]");
+  if (!t) return;
+  e.preventDefault();
+  var el = document.getElementById("ans");
+  if (!el || el.disabled) return;
+  var st = el.selectionStart == null ? el.value.length : el.selectionStart;
+  var en = el.selectionEnd == null ? st : el.selectionEnd;
+  el.value = el.value.slice(0, st) + t.dataset.acc + el.value.slice(en);
+  el.focus();
+  try { el.setSelectionRange(st + 1, st + 1); } catch (err) {}
+});
+
+app.addEventListener("click", function (e) {
+  var t = e.target.closest && e.target.closest("[data-act]");
+  if (!t || !app.contains(t) || t.disabled) return;
+  var act = t.dataset.act, id = t.dataset.id, s = session;
+  switch (act) {
+    case "home": renderHome(); break;
+    case "level": renderLevel(id); break;
+    case "lesson": renderLesson(id); break;
+    case "settings": renderSettings(); break;
+    case "practice": startPractice(t.dataset.kind, id); break;
+    case "test": startTest(id); break;
+    case "leave": leaveSession(); break;
+    case "say": speak(LESSON[view.id].items[+t.dataset.i].it[0]); break;
+    case "hear": if (s) speak(s.queue[0].item.it[0]); break;
+    case "hearslow": if (s) speak(s.queue[0].item.it[0], true); break;
+    case "answer": onAnswer(+t.dataset.i); break;
+    case "check": onCheckTyped(false); break;
+    case "dunno": onCheckTyped(true); break;
+    case "tile":
+      if (!s.locked && !s.bank[+t.dataset.i].used) { s.bank[+t.dataset.i].used = true; s.picked.push(+t.dataset.i); drawTiles(); }
+      break;
+    case "untile":
+      if (!s.locked) { var bi = s.picked.splice(+t.dataset.i, 1)[0]; s.bank[bi].used = false; drawTiles(); }
+      break;
+    case "checktiles": onCheckTiles(); break;
+    case "mic": onMic(); break;
+    case "giveup": grade(false, null, "Rätt: " + answerLine(s.queue[0].item)); speak(s.queue[0].item.it[0]); break;
+    case "reveal": onReveal(); break;
+    case "self": grade(t.dataset.ok === "1", t.dataset.ok === "1" ? "Bra! 👏" : "Öva lite till", answerLine(s.queue[0].item)); break;
+    case "next": next(); break;
+    case "setslow": store.set.slow = t.dataset.v === "1"; saveStore(); renderSettings(); break;
+    case "setself": store.set.self = t.dataset.v === "1"; saveStore(); renderSettings(); break;
+    case "testvoice": findVoice(); speak("Ciao! Benvenuta al corso di italiano."); break;
+    case "testmic":
+      var ms = document.getElementById("micst");
+      ms.textContent = "Jag lyssnar …";
+      listen(function (live) { ms.textContent = "”" + live + "”"; }, function (heard, err) {
+        if (err === "not-allowed" || err === "service-not-allowed") ms.textContent = "⚠️ Mikrofonen är inte tillåten för den här sidan.";
+        else if (!heard.length) ms.textContent = "Jag hörde inget" + (err ? " (" + err + ")" : "") + ".";
+        else ms.textContent = "Jag hörde: ”" + heard[0] + "” " + (speechScore(heard, ["Buongiorno"]) >= 0.8 ? "✓ Det fungerar!" : "");
+      });
+      break;
+    case "copybk":
+      var bk = document.getElementById("bk");
+      bk.value = backupCode(); bk.select();
+      try { navigator.clipboard.writeText(bk.value).then(function () { t.textContent = "Kopierat ✓"; }, function () { document.execCommand("copy"); t.textContent = "Kopierat ✓"; }); }
+      catch (err) { document.execCommand("copy"); t.textContent = "Kopierat ✓"; }
+      break;
+    case "restore":
+      try {
+        var data = JSON.parse(decodeURIComponent(escape(atob(document.getElementById("rs").value.trim()))));
+        if (!data || typeof data !== "object" || !data.w) throw 0;
+        store = fixStore(data); saveStore(); alert("Klart! Dina resultat är återställda."); renderHome();
+      } catch (err) { alert("Koden fungerade inte. Kontrollera att hela koden kom med."); }
+      break;
+    case "reset":
+      if (confirm("Vill du verkligen radera alla resultat?")) { store = fixStore({ set: store.set }); saveStore(); renderHome(); }
+      break;
+  }
+});
+
+document.addEventListener("keydown", function (e) {
+  if (e.key !== "Enter" || !session) return;
+  if (session.locked) { e.preventDefault(); next(); return; }
+  if (e.target && e.target.id === "ans") { e.preventDefault(); onCheckTyped(false); }
+});
+
+renderHome();
+</script>
+</body>
+</html>
