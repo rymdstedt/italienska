@@ -1210,7 +1210,32 @@ function findVoice() {
 }
 try { findVoice(); window.speechSynthesis.onvoiceschanged = findVoice; } catch (e) {}
 
+/* Inspelade fraser (rösten ”Serena”) ligger i audio/<nyckel>.m4a. Nyckeln är en FNV-1a-hash av texten. */
+function audioKey(t) {
+  var h = 0x811c9dc5;
+  for (var i = 0; i < t.length; i++) { h ^= t.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+  return ("0000000" + h.toString(16)).slice(-8);
+}
+var player = null;
+try { player = new Audio(); player.preload = "auto"; } catch (e) {}
+function stopAudio() {
+  if (player) { try { player.pause(); } catch (e) {} }
+  try { window.speechSynthesis.cancel(); } catch (e) {}
+}
 function speak(text, slow) {
+  stopAudio();
+  if (!player || store.set.device) return ttsSpeak(text, slow);
+  var fellBack = false, src = "audio/" + audioKey(String(text)) + ".m4a";
+  function fallback() { if (!fellBack && player.getAttribute("src") === src) { fellBack = true; ttsSpeak(text, slow); } }
+  try {
+    player.onerror = fallback;
+    player.setAttribute("src", src);
+    player.playbackRate = slow ? 0.7 : (store.set.slow ? 0.85 : 1);
+    var p = player.play();
+    if (p && p.catch) p.catch(function (err) { if (err && err.name !== "AbortError" && err.name !== "NotAllowedError") fallback(); });
+  } catch (e) { fallback(); }
+}
+function ttsSpeak(text, slow) {
   try {
     var s = window.speechSynthesis;
     if (!s) return;
@@ -1231,7 +1256,7 @@ function stopListening() {
 }
 function listen(onLive, onDone) {
   stopListening();
-  try { window.speechSynthesis.cancel(); } catch (e) {}
+  stopAudio();
   var r, heard = [], err = null, finished = false, timer;
   try {
     r = new SR();
@@ -1666,10 +1691,14 @@ function renderSettings() {
   var h = '<div class="top"><button class="back" data-act="home">‹ Tillbaka</button></div>' +
     '<h1 class="title">Inställningar</h1>' +
     '<div class="card"><b>🔊 Uppläsning</b><div class="seg">' +
+    '<button class="' + (!store.set.device ? "on" : "") + '" data-act="setdevice" data-v="0">Inspelad röst</button>' +
+    '<button class="' + (store.set.device ? "on" : "") + '" data-act="setdevice" data-v="1">Enhetens röst</button></div>' +
+    '<div class="seg">' +
     '<button class="' + (!store.set.slow ? "on" : "") + '" data-act="setslow" data-v="0">Normal takt</button>' +
     '<button class="' + (store.set.slow ? "on" : "") + '" data-act="setslow" data-v="1">Långsammare</button></div>' +
     '<button class="btn2" data-act="testvoice">Testa rösten</button>' +
-    '<p class="small" id="voicest">' + (itVoice ? "Italiensk röst: " + esc(itVoice.name) : "Hittar ingen italiensk röst ännu. På iPhone/iPad: Inställningar → Hjälpmedel → Uppläst innehåll → Röster → Italienska.") + '</p></div>' +
+    '<p class="small" id="voicest">' + (!store.set.device ? "Alla fraser är inlästa med den italienska rösten Serena, så det låter likadant på alla enheter. Hörs inget? Kontrollera att ljudet är på och att telefonen inte står på ljudlöst."
+      : itVoice ? "Enhetens italienska röst: " + esc(itVoice.name) : "Hittar ingen italiensk röst på enheten. På iPhone/iPad: Inställningar → Hjälpmedel → Uppläst innehåll → Röster → Italienska.") + '</p></div>' +
     '<div class="card"><b>🎤 Muntliga övningar</b>' +
     (micOk ? '<div class="seg"><button class="' + (!store.set.self ? "on" : "") + '" data-act="setself" data-v="0">Mikrofonen rättar</button>' +
       '<button class="' + (store.set.self ? "on" : "") + '" data-act="setself" data-v="1">Jag rättar själv</button></div>' +
@@ -1681,7 +1710,8 @@ function renderSettings() {
     '<textarea id="bk" readonly>' + backupCode() + '</textarea><button class="btn2" data-act="copybk">Kopiera koden</button>' +
     '<p class="small" style="margin-top:16px">Återställ från kod:</p><textarea id="rs" placeholder="Klistra in koden här"></textarea>' +
     '<button class="btn2" data-act="restore">Återställ</button></div>' +
-    '<button class="btn2 sm" data-act="reset">Nollställ alla resultat</button>';
+    '<button class="btn2 sm" data-act="reset">Nollställ alla resultat</button>' +
+    '<p class="small" style="margin-top:22px">Röst: ”Serena” från <a href="https://github.com/rhasspy/piper" style="color:inherit">Piper</a>, tränad på <a href="https://huggingface.co/datasets/committa/serena-synthetic-it-27h" style="color:inherit">serena-synthetic-it-27h</a> (CC BY 4.0).</p>';
   show(h);
 }
 
@@ -1729,6 +1759,7 @@ app.addEventListener("click", function (e) {
     case "reveal": onReveal(); break;
     case "self": grade(t.dataset.ok === "1", t.dataset.ok === "1" ? "Bra! 👏" : "Öva lite till", answerLine(s.queue[0].item)); break;
     case "next": next(); break;
+    case "setdevice": store.set.device = t.dataset.v === "1"; saveStore(); renderSettings(); break;
     case "setslow": store.set.slow = t.dataset.v === "1"; saveStore(); renderSettings(); break;
     case "setself": store.set.self = t.dataset.v === "1"; saveStore(); renderSettings(); break;
     case "testvoice": findVoice(); speak("Ciao! Benvenuta al corso di italiano."); break;
